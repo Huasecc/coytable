@@ -27,20 +27,6 @@
 
 ---
 
-## Installation / 安装
-
-**English:**
-1. Open Figma → **Menu → Plugins → Find more plugins**
-2. Search for **CoyTable**
-3. Click **Install**
-
-**中文：**
-1. 打开 Figma → **菜单 → 插件 → 查找更多插件**
-2. 搜索 **CoyTable**
-3. 点击 **安装**
-
----
-
 ## Usage / 使用说明
 
 **English:**
@@ -67,38 +53,6 @@
 | `Esc` | Cancel edit / 取消编辑 |
 | `Tab` | Next cell / 下一格 |
 | `Shift` + `Tab` | Previous cell / 上一格 |
-
----
-
-## Project Structure / 项目结构
-
-```
-coytable/
-├── ui.html          # Plugin UI (HTML + CSS + JS) / 插件界面
-├── code.js          # Main thread logic (Figma Plugin API) / 主线程逻辑
-├── manifest.json    # Figma plugin manifest / 插件清单
-└── README.md        # This file / 本文件
-```
-
-## Local Development / 本地开发
-
-**English:**
-1. Open Figma → **Plugins → Development → New Plugin**
-2. Select **Link existing plugin**
-3. Choose the `manifest.json` file from this repo
-4. Run from **Plugins → Development → CoyTable**
-
-**中文：**
-1. 打开 Figma → **插件 → 开发 → 新插件**
-2. 选择 **链接现有插件**
-3. 选择本仓库的 `manifest.json`
-4. 从 **插件 → 开发 → CoyTable** 运行
-
-### Tech Stack / 技术栈
-
-- **UI**: Vanilla HTML, CSS (Custom Properties), JavaScript
-- **Icons**: [Lucide](https://lucide.dev)
-- **Runtime**: Figma Plugin API
 
 ---
 

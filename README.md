@@ -3,8 +3,6 @@
 > A Figma plugin for generating beautifully styled tables with real-time preview.
 > 一款可视化表格生成 Figma 插件，实时预览、一键生成。
 
-![CoyTable](https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=table%20generation%20plugin%20screenshot%20showing%20a%20table%20editor%20panel%20on%20the%20right%20and%20table%20preview%20on%20the%20left%20in%20a%20Figma%20plugin%20ui%20sleek%20modern%20design&image_size=landscape_16_9)
-
 ---
 
 ## Features / 功能特性

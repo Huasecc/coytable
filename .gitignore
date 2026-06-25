@@ -1,3 +1,8 @@
+# Plugin source code (kept private)
+ui.html
+code.js
+manifest.json
+
 node_modules/
 .DS_Store
 *.log

@@ -2,7 +2,81 @@
 
 # ✨ CoyTable
 
-**一款 Figma 表格生成插件** · A Figma plugin for beautiful tables
+A Figma plugin for beautiful tables
+
+Live preview · Drag & drop · One-click generate
+
+</div>
+
+---
+
+## 🌟 Features
+
+| Feature | Description |
+|---------|-------------|
+| 🎨 **Visual Config** | Adjust rows, columns, size, colors & styles — see changes instantly |
+| ✏️ **Inline Edit** | Click any cell to edit text — `Enter` to confirm, `Tab` to jump |
+| 🔄 **Drag & Drop** | Grab row/column handles (⠿) to reorder freely |
+| 🏷️ **Rich Column Types** | Text, radio, checkbox, index, progress bar, tags, action buttons… |
+| ➕ **Insert Rows/Columns** | Hover between rows for a `+` to insert new ones |
+| 🎯 **Alignment Control** | Set text alignment (left/center/right) per row or column |
+| 🦓 **Zebra Stripes** | Toggle alternating row colors for cleaner tables |
+| 🌓 **Dark Mode** | Switch between light and dark themes in one click |
+| 🌐 **Bilingual UI** | Toggle Chinese / English with one click |
+| 🎨 **8 Preset Themes** | Default, dark, blue business, warm report, fresh green… |
+| 📋 **12 Data Templates** | User info, product list, project board, bug tracker… quick fill |
+| ↩️ **Re-edit** | Select an existing table on canvas to reload and modify |
+
+---
+
+## 🚀 How to Use
+
+**Three steps:**
+
+```
+① Configure → ② Preview → ③ Generate
+```
+
+**Detailed steps:**
+
+1. **🖌️ Style it** — Set rows, columns, size, colors, fonts in the right panel
+2. **👀 Preview** — See the table update in real time on the left
+3. **✏️ Edit content** — Double-click any cell to type text
+4. **🔄 Reorder** — Drag handles to rearrange rows & columns
+5. **➕ Add / Remove** — Hover a handle for insert, duplicate, or delete
+6. **🎯 Align** — Use the top toolbar or handle popup to adjust alignment
+7. **✨ Generate** — Click "Generate" — the table appears on your canvas
+
+### ⌨️ Shortcuts
+
+| Key | Action |
+|-----|--------|
+| `Enter` | Confirm edit |
+| `Esc` | Cancel edit |
+| `Tab` | Next cell |
+| `Shift` + `Tab` | Previous cell |
+
+---
+
+## 💡 Tips
+
+- 💡 **First time?** The help guide pops up automatically — shows once only
+- 🎨 **Quick theme** — Click the colored dots on top to switch themes instantly
+- 📋 **Demo data** — Pick a template from the "Preset Data" panel to fill content
+- 🕶️ **Dark mode** — Designer-friendly late-night mode
+- 🔁 **Re-edit tables** — Select a generated table on canvas to edit again
+
+---
+
+<br>
+
+---
+
+<div align="center">
+
+# ✨ CoyTable
+
+**一款 Figma 表格生成插件**
 
 实时预览 · 拖拽编辑 · 一键生成到画布
 
@@ -10,7 +84,7 @@
 
 ---
 
-## 🌟 它能帮你做什么？
+## 🌟 功能特性
 
 | 功能 | 说明 |
 |------|------|
@@ -58,7 +132,7 @@
 
 ---
 
-## 🎨 小贴士
+## 💡 小贴士
 
 - 💡 **第一次使用？** 插件会自动弹出使用说明，关闭后不再打扰
 - 🎨 **快速换色** — 点击顶部的彩色小圆点，一键切换主题

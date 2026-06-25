@@ -1,65 +1,81 @@
-# CoyTable
+<div align="center">
 
-> A Figma plugin for generating beautifully styled tables with real-time preview.
-> 一款可视化表格生成 Figma 插件，实时预览、一键生成。
+# ✨ CoyTable
 
----
+**一款 Figma 表格生成插件** · A Figma plugin for beautiful tables
 
-## Features / 功能特性
+实时预览 · 拖拽编辑 · 一键生成到画布
 
-| English | 中文 |
-|---------|------|
-| **Visual Configuration** — Adjust rows, columns, size, and styles with live preview | **可视化配置** — 行列/尺寸/样式实时预览 |
-| **Inline Cell Editing** — Click to edit, Enter to confirm, Tab to navigate | **内联编辑** — 点击编辑，Enter 确认，Tab 跳格 |
-| **Drag & Drop** — Reorder rows and columns by dragging handles | **拖拽排序** — 拖拽手柄重排行/列 |
-| **Rich Column Types** — Text, Radio, Checkbox, Index, Image, Progress, Tag, Action | **丰富列类型** — 文本/单选/复选/进度/标签/操作按钮等 |
-| **Row / Column Operations** — Insert, duplicate, delete via hover popups | **行列操作** — 悬停弹窗插入/复制/删除 |
-| **8 Preset Color Schemes** | **8 种预设配色** — 一键切换主题 |
-| **12 Data Templates** | **12 种数据模板** — 快速填充示例数据 |
-| **Zebra Stripes** — Toggle alternating row colors | **斑马纹** — 交替行背景色 |
-| **Text Wrapping & Alignment** — Left/Center/Right | **文字换行与对齐** |
-| **i18n** — Chinese & English UI | **中英双语** — 界面语言切换 |
-| **Dark Mode** — Light/Dark theme toggle | **明暗主题** — 亮色/暗色切换 |
-| **Re-edit** — Modify existing tables on canvas | **回传编辑** — 选中已有表格修改 |
-| **One-click Generate** | **一键生成到画布** |
+</div>
 
 ---
 
-## Usage / 使用说明
+## 🌟 它能帮你做什么？
 
-**English:**
-1. **Configure** table size, rows, columns, and styles in the right panel
-2. **Preview** changes in real-time on the left
-3. **Edit cells** by clicking directly on the table preview
-4. **Drag** row/column handles to reorder
-5. **Hover** over handles to access insert, duplicate, delete, and alignment options
-6. Click **Generate** to create the table on your Figma canvas
-
-**中文：**
-1. **配置** — 在右侧面板调整表格尺寸、行列和样式
-2. **预览** — 左侧实时显示效果
-3. **编辑** — 点击表格单元格直接修改内容
-4. **拖拽** — 拖拽行/列手柄调整顺序
-5. **悬停** — 悬停手柄弹出操作菜单（插入/复制/删除/对齐）
-6. **生成** — 点击"生成到画布"发送到 Figma
-
-### Keyboard Shortcuts / 快捷键
-
-| Key | Action / 操作 |
-|-----|---------------|
-| `Enter` | Confirm edit / 确认编辑 |
-| `Esc` | Cancel edit / 取消编辑 |
-| `Tab` | Next cell / 下一格 |
-| `Shift` + `Tab` | Previous cell / 上一格 |
+| 功能 | 说明 |
+|------|------|
+| 🎨 **可视化配置** | 在右侧面板调整行列、尺寸、颜色和样式，左侧实时预览 |
+| ✏️ **点击编辑** | 直接点表格里的格子就能改文字，按 `Enter` 确认、`Tab` 跳格 |
+| 🔄 **拖拽排序** | 拖住行或列左边的小手柄（⠿），随意调整顺序 |
+| 🏷️ **花式列类型** | 文本、单选、复选、序号、进度条、标签、操作按钮…… |
+| ➕ **插入行列** | 行与行之间悬停会出现 `+`，点击插入新行 |
+| 🎯 **对齐控制** | 每行每列都可以单独设置文字对齐（左/中/右） |
+| 🦓 **斑马纹** | 一键开启交替行背景色，表格更清晰 |
+| 🌓 **明暗主题** | 右上角一键切换亮色/暗色模式 |
+| 🌐 **中英双语** | 右上角 `中 / EN` 一键切换界面语言 |
+| 🎨 **8 套预设配色** | 默认、暗黑、蓝色商务、暖色报表、清新绿意……任你选 |
+| 📋 **12 套数据模板** | 用户信息、商品清单、项目看板、Bug 追踪……快速填充 |
+| ↩️ **回传编辑** | 选中画布上已有的表格，一键载入继续修改 |
 
 ---
 
-## Author / 作者
+## 🚀 怎么用？
 
-- **Coy花色** — [coyhuase@qq.com](mailto:coyhuase@qq.com)
+**三步搞定：**
 
-## License / 许可
+```
+① 配置 → ② 预览 → ③ 生成
+```
 
-All rights reserved. / 版权所有。
+**详细步骤：**
 
-© 2025-2026 CoyTable. All rights reserved.
+1. **🖌️ 调样式** — 在右侧面板设置表格的行数、列数、尺寸、颜色、字体等
+2. **👀 看效果** — 左侧表格实时更新，所见即所得
+3. **✏️ 改内容** — 双击表格格子直接输入文字
+4. **🔄 调顺序** — 拖拽手柄调整行列
+5. **➕ 增删改** — 悬停手柄，弹出菜单可插入、复制、删除
+6. **🎯 对齐** — 顶部工具栏或手柄弹窗调整文字对齐
+7. **✨ 生成** — 点击「生成到画布」，表格立刻出现在 Figma 中
+
+### ⌨️ 快捷键
+
+| 按键 | 用途 |
+|------|------|
+| `Enter` | 确认编辑 |
+| `Esc` | 取消编辑 |
+| `Tab` | 跳到下一格 |
+| `Shift` + `Tab` | 跳到上一格 |
+
+---
+
+## 🎨 小贴士
+
+- 💡 **第一次使用？** 插件会自动弹出使用说明，关闭后不再打扰
+- 🎨 **快速换色** — 点击顶部的彩色小圆点，一键切换主题
+- 📋 **填充演示数据** — 在「预设数据」面板选一个模板，直接填充示例内容
+- 🕶️ **暗色模式** — 设计师的夜猫子友好模式
+- 🔁 **修改已有表格** — 在 Figma 中选中之前生成的表格，底部会出现回传编辑栏
+
+---
+
+## 👩‍💻 关于作者
+
+**Coy花色** · [coyhuase@qq.com](mailto:coyhuase@qq.com)
+
+---
+
+<div align="center">
+
+© 2025-2026 CoyTable · All rights reserved
+
+</div>

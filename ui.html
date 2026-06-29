@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -1827,37 +1827,59 @@ document.getElementById('excelFileInput').addEventListener('change',function(){
 });
 
 // ══ Paste Table from Clipboard ══
-document.getElementById('btnPasteTable').addEventListener('click',async()=>{
-  try{
-    const text=await navigator.clipboard.readText();
-    if(!text||!text.trim()){showToast('剪贴板为空','error');return;}
-    const rows=text.split(/\r?\n/).filter(r=>r.trim());
-    if(rows.length===0){showToast('剪贴板数据为空','error');return;}
-    const data=rows.map(r=>r.split('\t').map(c=>c.trim()));
-    const cols=Math.max(...data.map(r=>r.length));
-    if(cols===0){showToast('剪贴板数据为空','error');return;}
-    model.hasHeader=true;
-    model.rows=data.length;
-    model.cols=cols;
-    model.colTypes=Array(cols).fill('text');
-    model.colAlign=Array(cols).fill('');
-    model.rowAlign=Array(data.length).fill('');
-    model.columnWidths=Array(cols).fill(model.colWidth);
-    model.colProps=Array(cols).fill({});
-    model._customCols=new Set();
-    model.cellData=data.map(row=>{
-      const nr=[];
-      for(let c=0;c<cols;c++)nr[c]=c<row.length?row[c]:'';
-      return nr;
-    });
-    document.getElementById('cRows').value=model.rows;
-    document.getElementById('cCols').value=model.cols;
-    sync();render();
-    showToast('粘贴成功 ('+data.length+'行×'+cols+'列)','success');
-  }catch(err){
-    if(err.name==='NotAllowedError'||err.message.includes('read'))showToast('请先点击页面再粘贴','error');
-    else showToast('粘贴失败: '+err.message,'error');
-  }
+// Use hidden textarea + paste event (works in Figma plugin, unlike clipboard API)
+const _pasteTextarea=document.createElement('textarea');
+_pasteTextarea.style.cssText='position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;';
+document.body.appendChild(_pasteTextarea);
+let _pasteResolve=null;
+_pasteTextarea.addEventListener('paste',function(e){
+  e.preventDefault();
+  const text=(e.clipboardData||window.clipboardData).getData('text/plain');
+  if(_pasteResolve){_pasteResolve(text);_pasteResolve=null;}
+});
+// Also handle the paste event globally as a fallback
+document.addEventListener('paste',function(e){
+  if(!_pasteResolve)return;
+  e.preventDefault();
+  const text=(e.clipboardData||window.clipboardData).getData('text/plain');
+  if(_pasteResolve){_pasteResolve(text);_pasteResolve=null;}
+});
+function parseClipboardTable(text){
+  if(!text||!text.trim()){showToast('剪贴板为空','error');return;}
+  const rows=text.split(/\r?\n/).filter(r=>r.trim());
+  if(rows.length===0){showToast('剪贴板数据为空','error');return;}
+  const data=rows.map(r=>r.split('\t').map(c=>c.trim()));
+  const cols=Math.max(...data.map(r=>r.length));
+  if(cols===0){showToast('剪贴板数据为空','error');return;}
+  model.hasHeader=true;
+  model.rows=data.length;
+  model.cols=cols;
+  model.colTypes=Array(cols).fill('text');
+  model.colAlign=Array(cols).fill('');
+  model.rowAlign=Array(data.length).fill('');
+  model.columnWidths=Array(cols).fill(model.colWidth);
+  model.colProps=Array(cols).fill({});
+  model._customCols=new Set();
+  model.cellData=data.map(row=>{
+    const nr=[];
+    for(let c=0;c<cols;c++)nr[c]=c<row.length?row[c]:'';
+    return nr;
+  });
+  document.getElementById('cRows').value=model.rows;
+  document.getElementById('cCols').value=model.cols;
+  sync();render();
+  showToast('识别成功 ('+data.length+'行×'+cols+'列)','success');
+}
+document.getElementById('btnPasteTable').addEventListener('click',function(){
+  _pasteTextarea.value='';
+  _pasteTextarea.focus();
+  showToast('请按 Ctrl+V 粘贴表格数据','');
+  // Wait for paste event with timeout
+  const timeout=setTimeout(()=>{_pasteResolve=null;showToast('粘贴超时，请重新点击按钮','error');},30000);
+  _pasteResolve=function(text){
+    clearTimeout(timeout);
+    parseClipboardTable(text);
+  };
 });
 
 // Window resize

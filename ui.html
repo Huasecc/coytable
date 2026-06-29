@@ -1,10 +1,11 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CoyTable</title>
 <script src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 :root {
   --font-sans: 'Inter', -apple-system, system-ui, sans-serif;
@@ -147,6 +148,11 @@ body { display:flex; flex-direction:column; }
 /* Help button */
 .help-btn { width:24px; height:24px; border-radius:50%; border:1px solid var(--border); background:var(--card); color:var(--muted-fg); font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .15s; line-height:1; flex-shrink:0; }
 .help-btn:hover { background:var(--primary); color:var(--primary-fg); border-color:var(--primary); }
+#btnImportExcel:hover { background:var(--primary) !important; color:var(--primary-fg) !important; border-color:var(--primary) !important; }
+#btnPasteTable:hover { background:var(--primary) !important; color:var(--primary-fg) !important; border-color:var(--primary) !important; }
+.bottom-bar .tgl-switch button { transition:all .12s; }
+.bottom-bar .tgl-switch button:hover { background:var(--primary); color:#fff; }
+.bottom-bar .tgl-switch button.active:hover { background:var(--primary); color:#fff; }
 .bottom-bar { position:fixed; bottom:12px; left:12px; display:flex; align-items:center; gap:6px; z-index:100; }
 
 /* Help modal */
@@ -230,8 +236,8 @@ body { display:flex; flex-direction:column; }
     <button class="toolbar-btn" id="tbAlignRight" title="右对齐"><i data-lucide="align-right"></i></button>
   </div>
   <div class="util-right">
-    <button class="btn btn-secondary btn-sm" id="btnReset">重置</button>
-    <button class="btn btn-primary" id="btnGenerate">生成到画布<i data-lucide="arrow-right" style="width:13px;height:13px"></i></button>
+    <button class="btn btn-secondary btn-sm" id="btnReset" style="width:56px;justify-content:center;">重置</button>
+    <button class="btn btn-primary" id="btnGenerate" style="width:96px;justify-content:center;">生成到画布<i data-lucide="arrow-right" style="width:13px;height:13px"></i></button>
   </div>
 </div>
 
@@ -498,6 +504,9 @@ body { display:flex; flex-direction:column; }
   </div>
 
 <div class="bottom-bar">
+  <input type="file" id="excelFileInput" accept=".xlsx,.xls,.csv" style="display:none">
+  <button class="btn btn-sm" id="btnImportExcel" style="height:28px;width:80px;padding:0;font-size:10px;border-radius:20px;background:var(--bg);color:var(--muted-fg);border:1px solid var(--border);justify-content:center;font-weight:600;">导入Excel</button>
+  <button class="btn btn-sm" id="btnPasteTable" style="height:28px;width:90px;padding:0;font-size:10px;border-radius:20px;background:var(--bg);color:var(--muted-fg);border:1px solid var(--border);justify-content:center;font-weight:600;">剪贴板识别</button>
   <div class="tgl-switch" style="width:auto;">
     <button id="tbLangCn" class="active" style="flex:none;height:22px;padding:1px 4px;width:30px;display:flex;align-items:center;justify-content:center">中</button>
     <button id="tbLangEn" style="flex:none;height:22px;padding:1px 4px;width:30px;display:flex;align-items:center;justify-content:center">EN</button>
@@ -1434,6 +1443,8 @@ const _i18n={zh:{
   addColLeft:'左侧插入',addColRight:'右侧插入',dupCol:'复制列',delCol:'删除列',
   addRowAbove:'上方插入',addRowBelow:'下方插入',dupRow:'复制行',delRow:'删除行',
   normal:'常规',bold:'加粗',radio:'单选',checkbox:'复选',index:'序号',image:'图片',progress:'进度',tag:'标签',action:'操作',
+  importExcel:'导入Excel',
+  pasteTable:'剪贴板识别',
    applyDefault:'默认标准',applyDark:'暗黑',applyBlue:'蓝色商务',applyWarm:'暖色报表',applyGreen:'清新绿意',applyPink:'粉色温馨',applyPurple:'紫色典雅',applyGray:'灰色极简',
   },en:{
     collapseSize:'Table Size',collapseGlobal:'Global Style',collapseHeader:'Header Style',collapseCell:'Cell Style',collapseZebra:'Zebra',collapseTemplates:'Templates',collapseFillData:'Fill Data',
@@ -1448,6 +1459,8 @@ const _i18n={zh:{
     addColLeft:'+Left',addColRight:'+Right',dupCol:'Copy',delCol:'Del',
     addRowAbove:'+Above',addRowBelow:'+Below',dupRow:'Copy',delRow:'Del',
     normal:'Regular',bold:'Bold',radio:'Select',checkbox:'Check',index:'Index',image:'Image',progress:'Progress',tag:'Tag',action:'Action',
+    importExcel:'Import Excel',
+    pasteTable:'Clipboard Detect',
   applyDefault:'Default',applyDark:'Dark',applyBlue:'Blue',applyWarm:'Warm',applyGreen:'Green',applyPink:'Pink',applyPurple:'Purple',applyGray:'Gray',
     fillUser:'User Info',fillProduct:'Products',fillProject:'Projects',fillTask:'Tasks',fillCustomer:'Customers',fillOrder:'Orders',fillBug:'Bugs',fillFinance:'Finance',fillMeeting:'Meetings',fillCourse:'Courses',fillDesign:'Design Tasks',fillRecruit:'Recruitment',
 }};
@@ -1542,7 +1555,7 @@ function applyLang(lang){
   // Update template buttons, fill buttons, and utility buttons
   const templateBtnMap={cApplyDefault:t.applyDefault,cApplyDark:t.applyDark,cApplyBlue:t.applyBlue,cApplyWarm:t.applyWarm,cApplyGreen:t.applyGreen,cApplyPink:t.applyPink,cApplyPurple:t.applyPurple,cApplyGray:t.applyGray};
   const fillBtnMap={cFillUser:t.fillUser||'用户信息',cFillProduct:t.fillProduct||'商品清单',cFillProject:t.fillProject||'项目看板',cFillTask:t.fillTask||'任务追踪',cFillCustomer:t.fillCustomer||'客户管理',cFillOrder:t.fillOrder||'订单管理',cFillBug:t.fillBug||'Bug追踪',cFillFinance:t.fillFinance||'财务流水',cFillMeeting:t.fillMeeting||'会议纪要',cFillCourse:t.fillCourse||'课程评分',cFillDesign:t.fillDesign||'设计任务',cFillRecruit:t.fillRecruit||'招聘管理'};
-  const utilBtnMap={btnReset:t.reset,btnGenerate:t.generate};
+  const utilBtnMap={btnReset:t.reset,btnGenerate:t.generate,btnImportExcel:t.importExcel,btnPasteTable:t.pasteTable};
   Object.keys({...templateBtnMap,...fillBtnMap,...utilBtnMap}).forEach(id=>{
     const el=document.getElementById(id);
     if(!el)return;
@@ -1761,6 +1774,90 @@ function applyFillPreset(key){
 }
 ['cFillUser','cFillProduct','cFillProject','cFillTask','cFillCustomer','cFillOrder','cFillBug','cFillFinance','cFillMeeting','cFillCourse','cFillDesign','cFillRecruit'].forEach((id,i)=>{
   document.getElementById(id).addEventListener('click',()=>{applyFillPreset(['user','product','project','task','customer','order','bug','finance','meeting','course','design','recruit'][i]);});
+});
+
+// ══ Excel Import ══
+document.getElementById('btnImportExcel').addEventListener('click',()=>{
+  if(typeof XLSX==='undefined'){showToast('导入库加载中，请刷新重试','error');return;}
+  document.getElementById('excelFileInput').click();
+});
+document.getElementById('excelFileInput').addEventListener('change',function(){
+  const file=this.files[0];
+  if(!file)return;
+  if(typeof XLSX==='undefined'){showToast('导入库加载失败，请刷新重试','error');this.value='';return;}
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      const u8=new Uint8Array(ev.target.result);
+      const wb=XLSX.read(u8,{type:'array'});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const aoa=XLSX.utils.sheet_to_json(ws,{header:1});
+      if(!aoa||aoa.length===0){showToast('Excel 文件为空','error');return;}
+      // Remove trailing empty rows
+      while(aoa.length>0&&aoa[aoa.length-1].every(c=>c===undefined||c===null||c===''))aoa.pop();
+      // Determine max column count and remove trailing empty cells
+      const rows=aoa.length;
+      let cols=0;
+      aoa.forEach(r=>{while(r.length>0&&(r[r.length-1]===undefined||r[r.length-1]===null||r[r.length-1]===''))r.pop();if(r.length>cols)cols=r.length;});
+      if(cols===0||rows===0){showToast('Excel 文件为空','error');return;}
+      model.hasHeader=true;
+      model.rows=rows;
+      model.cols=cols;
+      model.colTypes=Array(cols).fill('text');
+      model.colAlign=Array(cols).fill('');
+      model.rowAlign=Array(rows).fill('');
+      model.columnWidths=Array(cols).fill(model.colWidth);
+      model.colProps=Array(cols).fill({});
+      model._customCols=new Set();
+      model.cellData=aoa.map(row=>{
+        const nr=[];
+        for(let c=0;c<cols;c++)nr[c]=row[c]!==undefined&&row[c]!==null?String(row[c]):'';
+        return nr;
+      });
+      document.getElementById('cRows').value=model.rows;
+      document.getElementById('cCols').value=model.cols;
+      sync();render();
+      showToast('导入成功 ('+rows+'行×'+cols+'列)','success');
+    }catch(err){
+      showToast('导入失败: '+err.message,'error');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+  this.value='';
+});
+
+// ══ Paste Table from Clipboard ══
+document.getElementById('btnPasteTable').addEventListener('click',async()=>{
+  try{
+    const text=await navigator.clipboard.readText();
+    if(!text||!text.trim()){showToast('剪贴板为空','error');return;}
+    const rows=text.split(/\r?\n/).filter(r=>r.trim());
+    if(rows.length===0){showToast('剪贴板数据为空','error');return;}
+    const data=rows.map(r=>r.split('\t').map(c=>c.trim()));
+    const cols=Math.max(...data.map(r=>r.length));
+    if(cols===0){showToast('剪贴板数据为空','error');return;}
+    model.hasHeader=true;
+    model.rows=data.length;
+    model.cols=cols;
+    model.colTypes=Array(cols).fill('text');
+    model.colAlign=Array(cols).fill('');
+    model.rowAlign=Array(data.length).fill('');
+    model.columnWidths=Array(cols).fill(model.colWidth);
+    model.colProps=Array(cols).fill({});
+    model._customCols=new Set();
+    model.cellData=data.map(row=>{
+      const nr=[];
+      for(let c=0;c<cols;c++)nr[c]=c<row.length?row[c]:'';
+      return nr;
+    });
+    document.getElementById('cRows').value=model.rows;
+    document.getElementById('cCols').value=model.cols;
+    sync();render();
+    showToast('粘贴成功 ('+data.length+'行×'+cols+'列)','success');
+  }catch(err){
+    if(err.name==='NotAllowedError'||err.message.includes('read'))showToast('请先点击页面再粘贴','error');
+    else showToast('粘贴失败: '+err.message,'error');
+  }
 });
 
 // Window resize

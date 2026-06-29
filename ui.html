@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -689,7 +689,7 @@ function render() {
   html+=`<div style="display:flex;gap:0;margin-bottom:4px;padding-left:32px">`;
   for (let c=0;c<cols;c++){
     const cw=useColWidths[c]||colWidth;
-    html+=`<div class="ch-cell" data-c="${c}" draggable="true" style="width:${cw}px;height:20px;border-radius:${cr}px;display:flex;align-items:center;justify-content:center;cursor:grab;transition:all .12s;background:${_selectedCol===c?'rgba(0,127,252,.15)':_flashCol===c?'rgba(245,158,11,.25)':'transparent'};${_selectedCol===c?';outline:1px solid var(--primary)':_flashCol===c?';outline:1px solid rgba(245,158,11,.5)':''}"><span class="ch-dot" style="font-size:12px;color:${_selectedCol===c?'var(--primary)':'var(--muted-fg)'};line-height:1;transition:color .12s;display:inline-block;transform:rotate(90deg)">⠿</span></div>`;
+    html+=`<div class="ch-cell" data-c="${c}" draggable="true" style="width:${cw}px;height:20px;border-radius:${cr}px;display:flex;align-items:center;justify-content:center;cursor:grab;background:${_selectedCol===c?'rgba(0,127,252,.15)':_flashCol===c?'rgba(245,158,11,.25)':'transparent'};${_selectedCol===c?';outline:1px solid var(--primary)':_flashCol===c?';outline:1px solid rgba(245,158,11,.5)':''}"><span class="ch-dot" style="font-size:12px;color:${_selectedCol===c?'var(--primary)':'var(--muted-fg)'};line-height:1;display:inline-block;transform:rotate(90deg)">⠿</span></div>`;
   }
   html+='</div>';
 
@@ -697,7 +697,7 @@ function render() {
   html+='<div style="display:flex;gap:4px">';
   html+='<div style="display:flex;flex-direction:column;gap:0">';
   for (let r=0;r<rows;r++){
-    html+=`<div class="rh-cell${hasHeader&&r===0?' rh-header':''}" data-r="${r}" draggable="true" style="width:28px;height:${useRowHeight}px;border-radius:${cr}px;display:flex;align-items:center;justify-content:center;${hasHeader&&r===0?'cursor:default;':'cursor:grab;'}transition:all .12s;background:${_selectedRow===r?'rgba(0,127,252,.15)':_flashRow===r?'rgba(245,158,11,.25)':'transparent'};${_selectedRow===r?';outline:1px solid var(--primary)':_flashRow===r?';outline:1px solid rgba(245,158,11,.5)':''}"><span class="rh-dot" style="font-size:12px;color:${_selectedRow===r?'var(--primary)':'var(--muted-fg)'};line-height:1;transition:color .12s;display:flex;align-items:center">${hasHeader&&r===0?'':'⠿'}</span></div>`;
+    html+=`<div class="rh-cell${hasHeader&&r===0?' rh-header':''}" data-r="${r}" draggable="true" style="width:28px;height:${useRowHeight}px;border-radius:${cr}px;display:flex;align-items:center;justify-content:center;${hasHeader&&r===0?'cursor:default;':'cursor:grab;'}background:${_selectedRow===r?'rgba(0,127,252,.15)':_flashRow===r?'rgba(245,158,11,.25)':'transparent'};${_selectedRow===r?';outline:1px solid var(--primary)':_flashRow===r?';outline:1px solid rgba(245,158,11,.5)':''}"><span class="rh-dot" style="font-size:12px;color:${_selectedRow===r?'var(--primary)':'var(--muted-fg)'};line-height:1;display:flex;align-items:center">${hasHeader&&r===0?'':'⠿'}</span></div>`;
   }
   html+='</div>';
 
@@ -746,6 +746,18 @@ function render() {
 
   html+='</div>'; // close container
   wrap.innerHTML=html;
+  // Sync row handle heights & overlay to actual table dimensions
+  requestAnimationFrame(()=>{
+    try{
+      const _tb=wrap.querySelector('.preview-table');
+      if(_tb){
+        const _trs=_tb.querySelectorAll('tr:not(.ri-spacer)'),_rhs=wrap.querySelectorAll('.rh-cell');
+        _trs.forEach((tr,i)=>{if(_rhs[i])_rhs[i].style.height=tr.offsetHeight+'px';});
+        const _ov=wrap.querySelector('.cib-overlay');
+        if(_ov)_ov.style.height=_tb.offsetHeight+'px';
+      }
+    }catch(e){}
+  });
   try{lucide.createIcons()}catch(e){}
   // Attach insert-col type selector on hit target hover
   wrap.querySelectorAll('.cib-hit').forEach(hit=>{
@@ -871,6 +883,7 @@ document.getElementById('previewWrap').addEventListener('click',function(e){
     if(_selectedRow!==null||_selectedCol!==null){_selectedRow=null;_selectedCol=null;render();}
     const p=document.querySelector('.handle-popup');if(p)p.remove();return;}
   document.querySelectorAll('.handle-popup').forEach(p=>p.remove());
+  _flashCol=-1;_flashRow=-1;clearTimeout(_flashTimer);
   if(rh){_selectedRow=+rh.dataset.r;_selectedCol=null;}
   if(ch){_selectedCol=+ch.dataset.c;_selectedRow=null;}
   // Render to show selection highlight, then re-find handle DOM elements
@@ -910,9 +923,9 @@ document.getElementById('previewWrap').addEventListener('click',function(e){
       p.addEventListener('click',e2=>{
         const b=e2.target.closest('button');if(!b)return;
         const a=b.dataset.action,rr=+b.dataset.r;
-        if(a==='add-row-above'){if(_selectedRow!==null&&_selectedRow>=rr)_selectedRow++;model.cellData.splice(rr,0,Array(model.cols).fill('文本'));model.rows++;document.getElementById('cRows').value=model.rows;_flashRow=rr;render();}
-        else if(a==='add-row-below'){if(_selectedRow!==null&&_selectedRow>rr)_selectedRow++;model.cellData.splice(rr+1,0,Array(model.cols).fill('文本'));model.rows++;document.getElementById('cRows').value=model.rows;_flashRow=rr+1;render();}
-        else if(a==='dup-row'){if(_selectedRow!==null&&_selectedRow>rr)_selectedRow++;model.cellData.splice(rr+1,0,[...model.cellData[rr]]);model.rows++;document.getElementById('cRows').value=model.rows;_flashRow=rr+1;render();}
+        if(a==='add-row-above'){if(_selectedRow!==null&&_selectedRow>=rr)_selectedRow++;model.cellData.splice(rr,0,Array(model.cols).fill('文本'));model.rows++;document.getElementById('cRows').value=model.rows;_flashRow=_selectedRow-1;render();}
+        else if(a==='add-row-below'){if(_selectedRow!==null&&_selectedRow>rr)_selectedRow++;model.cellData.splice(rr+1,0,Array(model.cols).fill('文本'));model.rows++;document.getElementById('cRows').value=model.rows;_flashRow=_selectedRow+1;render();}
+        else if(a==='dup-row'){if(_selectedRow!==null&&_selectedRow>rr)_selectedRow++;model.cellData.splice(rr+1,0,[...model.cellData[rr]]);model.rows++;document.getElementById('cRows').value=model.rows;_flashRow=_selectedRow+1;render();}
         else if(a==='del-row'){if(model.rows<=1){showToast('至少保留一行','error');return;}if(_selectedRow!==null){if(_selectedRow===rr)_selectedRow=null;else if(_selectedRow>rr)_selectedRow--;}model.cellData.splice(rr,1);model.rows--;document.getElementById('cRows').value=model.rows;p.remove();render();}
         else if(a==='row-align'){const nv=b.dataset.v===model.rowAlign[rr]?'':b.dataset.v;model.rowAlign[rr]=nv;p.querySelectorAll('[data-action="row-align"]').forEach(btn=>btn.classList.toggle('hp-active',btn.dataset.v===nv));render();}
       });

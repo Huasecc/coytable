@@ -1,4 +1,4 @@
-﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -200,8 +200,11 @@ body { display:flex; flex-direction:column; }
 .cib-line { flex: 1; width: 1px; background: var(--primary); }
 .cib-btn { pointer-events: auto; width: 18px; height: 18px; border-radius: 50%; background: var(--primary); border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 0; line-height: 1; transition: transform .12s; position: relative; z-index: 2; }
 .cib-btn:hover { transform: scale(1.2); }
+/* Hover hit target for type selector (always interactive, outside .cib-visual) */
+.cib-hit { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:20px; height:20px; border-radius:50%; z-index:20; pointer-events:auto; cursor:pointer; }
+/* Flash animation */
+@keyframes flash-in { 0% { box-shadow:inset 0 0 0 999px rgba(245,158,11,0); } 100% { box-shadow:inset 0 0 0 999px rgba(245,158,11,.25); } }
 </style>
-</head>
 <body>
 
 <div class="top-utility-bar" id="topUtilityBar" style="display:none">
@@ -639,6 +642,7 @@ function ensureCellData() {
 
 // ══ Render ══
 let _selectedCell=null,_selectedRow=null,_selectedCol=null;
+let _flashCol=-1,_flashRow=-1,_flashTimer=null;
 function render() {
   // Clean up any orphaned popups
   document.querySelector('.cib-type-popup')?.remove();
@@ -685,7 +689,7 @@ function render() {
   html+=`<div style="display:flex;gap:0;margin-bottom:4px;padding-left:32px">`;
   for (let c=0;c<cols;c++){
     const cw=useColWidths[c]||colWidth;
-    html+=`<div class="ch-cell" data-c="${c}" draggable="true" style="width:${cw}px;height:20px;border-radius:${cr}px;display:flex;align-items:center;justify-content:center;cursor:grab;transition:all .12s;background:${_selectedCol===c?'var(--primary)':'transparent'};${_selectedCol===c?'opacity:.15':''}"><span class="ch-dot" style="font-size:12px;color:${_selectedCol===c?'var(--primary)':'var(--muted-fg)'};line-height:1;transition:color .12s;display:inline-block;transform:rotate(90deg)">⠿</span></div>`;
+    html+=`<div class="ch-cell" data-c="${c}" draggable="true" style="width:${cw}px;height:20px;border-radius:${cr}px;display:flex;align-items:center;justify-content:center;cursor:grab;transition:all .12s;background:${_selectedCol===c?'rgba(0,127,252,.15)':_flashCol===c?'rgba(245,158,11,.25)':'transparent'};${_selectedCol===c?';outline:1px solid var(--primary)':_flashCol===c?';outline:1px solid rgba(245,158,11,.5)':''}"><span class="ch-dot" style="font-size:12px;color:${_selectedCol===c?'var(--primary)':'var(--muted-fg)'};line-height:1;transition:color .12s;display:inline-block;transform:rotate(90deg)">⠿</span></div>`;
   }
   html+='</div>';
 
@@ -693,7 +697,7 @@ function render() {
   html+='<div style="display:flex;gap:4px">';
   html+='<div style="display:flex;flex-direction:column;gap:0">';
   for (let r=0;r<rows;r++){
-    html+=`<div class="rh-cell${hasHeader&&r===0?' rh-header':''}" data-r="${r}" draggable="true" style="width:28px;height:${useRowHeight}px;border-radius:${cr}px;display:flex;align-items:center;justify-content:center;${hasHeader&&r===0?'cursor:default;':'cursor:grab;'}transition:all .12s;background:${_selectedRow===r?'var(--primary)':'transparent'};${_selectedRow===r?'opacity:.15':''}"><span class="rh-dot" style="font-size:12px;color:${_selectedRow===r?'var(--primary)':'var(--muted-fg)'};line-height:1;transition:color .12s;display:flex;align-items:center">${hasHeader&&r===0?'':'⠿'}</span></div>`;
+    html+=`<div class="rh-cell${hasHeader&&r===0?' rh-header':''}" data-r="${r}" draggable="true" style="width:28px;height:${useRowHeight}px;border-radius:${cr}px;display:flex;align-items:center;justify-content:center;${hasHeader&&r===0?'cursor:default;':'cursor:grab;'}transition:all .12s;background:${_selectedRow===r?'rgba(0,127,252,.15)':_flashRow===r?'rgba(245,158,11,.25)':'transparent'};${_selectedRow===r?';outline:1px solid var(--primary)':_flashRow===r?';outline:1px solid rgba(245,158,11,.5)':''}"><span class="rh-dot" style="font-size:12px;color:${_selectedRow===r?'var(--primary)':'var(--muted-fg)'};line-height:1;transition:color .12s;display:flex;align-items:center">${hasHeader&&r===0?'':'⠿'}</span></div>`;
   }
   html+='</div>';
 
@@ -713,8 +717,8 @@ function render() {
       if (model.wrap) b+='white-space:normal;word-break:break-word;overflow-wrap:break-word;';
       else b+='overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
       const ca=colAlign[c]||textAlign;
-      if (_selectedCell&&_selectedCell.r===r&&_selectedCell.c===c) b+='outline:2px solid var(--primary);outline-offset:-2px;';
-      if((_selectedRow!==null&&_selectedRow===r)||(_selectedCol!==null&&_selectedCol===c)) b+='background-image:linear-gradient(rgba(0,127,252,.08),rgba(0,127,252,.08));';
+      if ((_selectedCell&&_selectedCell.r===r&&_selectedCell.c===c)||(_selectedRow!==null&&_selectedRow===r)||(_selectedCol!==null&&_selectedCol===c)) b+='box-shadow:inset 0 0 0 999px rgba(0,127,252,.12);';
+       if((_flashCol>=0&&_flashCol===c)||(_flashRow>=0&&_flashRow===r)) b+='animation:flash-in .15s ease-out forwards;box-shadow:inset 0 0 0 999px rgba(245,158,11,.25);';
       const va=rowAlign[r]||'middle';
       b+=`vertical-align:${va};`;
       const content=renderCell(r,c,val);
@@ -736,16 +740,16 @@ function render() {
   for (let c=0;c<cols-1;c++){
     const cw=useColWidths[c]||colWidth;
     colOff+=cw;
-    html+=`<div class="cib-zone" data-after="${c}" style="left:${colOff-6}px"><div class="cib-visual"><span class="cib-line"></span><button class="cib-btn" data-action="insert-col" data-after="${c}"><i data-lucide="plus" style="width:12px;height:12px"></i></button><span class="cib-line"></span></div></div>`;
+    html+=`<div class="cib-zone" data-after="${c}" style="left:${colOff-6}px"><div class="cib-hit" data-after="${c}"></div><div class="cib-visual"><span class="cib-line"></span><button class="cib-btn" data-action="insert-col" data-after="${c}"><i data-lucide="plus" style="width:12px;height:12px"></i></button><span class="cib-line"></span></div></div>`;
   }
   html+='</div>';
 
   html+='</div>'; // close container
   wrap.innerHTML=html;
   try{lucide.createIcons()}catch(e){}
-  // Attach insert-col type selector on button hover
-  wrap.querySelectorAll('.cib-btn').forEach(btn=>{
-    btn.addEventListener('mouseenter',function(){
+  // Attach insert-col type selector on hit target hover
+  wrap.querySelectorAll('.cib-hit').forEach(hit=>{
+    hit.addEventListener('mouseenter',function(e){
       if(document.querySelector('.cib-type-popup'))return;
       if(_citimer){clearTimeout(_citimer);_citimer=null;}
       const ac=parseInt(this.dataset.after);
@@ -757,28 +761,41 @@ function render() {
         {v:'tag',icon:'tag'},{v:'action',icon:'wrench'}
       ].map(t=>`<button data-action="insert-col-type" data-v="${t.v}" data-after="${ac}" class="hp-type-btn" style="width:20px;height:20px"><i data-lucide="${t.icon}" style="width:11px;height:11px"></i></button>`).join('');
       document.body.appendChild(p);try{lucide.createIcons()}catch(e){}
-      positionPopup(p,this);
+      // Position popup above cursor
+      p.style.top=(e.clientY-10)+'px';p.style.left=(e.clientX-10)+'px';p.style.bottom='auto';p.style.transform='none';
+      requestAnimationFrame(()=>{
+        const pRect=p.getBoundingClientRect();
+        let top=pRect.top-pRect.height-8,left=pRect.left+(20-pRect.width)/2;
+        if(top<8) top=pRect.bottom+8;
+        if(left+pRect.width>window.innerWidth-8) left=window.innerWidth-pRect.width-8;
+        if(left<8) left=8;
+        if(top+pRect.height>window.innerHeight-8) top=8;
+        p.style.top=top+'px';p.style.left=left+'px';
+      });
       p.addEventListener('click',function(ev){
         const tb=ev.target.closest('[data-action="insert-col-type"]');
         if(!tb)return;
         const v=tb.dataset.v,ac2=parseInt(tb.dataset.after);
+        if(_selectedCol!==null&&_selectedCol>ac2)_selectedCol++;
         for(let r=0;r<model.rows;r++)model.cellData[r].splice(ac2+1,0,'文本');
         model.colTypes.splice(ac2+1,0,v);model.colAlign.splice(ac2+1,0,'');
         model.columnWidths.splice(ac2+1,0,model.colWidth);model.colProps.splice(ac2+1,0,{});
         shiftCustomCols(ac2+1,1);model.cols++;document.getElementById('cCols').value=model.cols;
-        p.remove();render();
+        p.remove();_flashCol=ac2+1;render();
       });
     });
-    btn.addEventListener('mouseleave',function(){
+    hit.addEventListener('mouseleave',function(){
       if(_citimer)clearTimeout(_citimer);
       _citimer=setTimeout(()=>{
         const el=document.querySelector('.cib-type-popup');
-        const hovered=document.querySelector('.cib-btn:hover');
+        const hovered=document.querySelector('.cib-hit:hover');
         if(el&&!hovered)el.remove();
       },150);
     });
   });
   if(_lang!=='zh')applyLang(_lang);
+  // Flash auto-clear timer
+  if(_flashCol>=0||_flashRow>=0){clearTimeout(_flashTimer);_flashTimer=setTimeout(()=>{_flashCol=-1;_flashRow=-1;render();},800);}
 }
 
 function shiftCustomCols(from,delta){if(!model._customCols)return;const ns=new Set();for(const v of model._customCols)ns.add(v>=from?v+delta:v);model._customCols=ns;}
@@ -822,11 +839,12 @@ document.getElementById('previewWrap').addEventListener('click',function(e){
   const riBtn=e.target.closest('[data-action="insert-row"]');
   if(riBtn){
     const afterR=parseInt(riBtn.dataset.after);
+    if(_selectedRow!==null&&_selectedRow>afterR)_selectedRow++;
     model.cellData.splice(afterR+1,0,Array(model.cols).fill('文本'));
     model.rows++;
     if(model.rowAlign.length<model.rows) model.rowAlign.splice(afterR+1,0,'');
     document.getElementById('cRows').value=model.rows;
-    render();
+    _flashRow=afterR+1;render();
     return;
   }
 
@@ -835,6 +853,7 @@ document.getElementById('previewWrap').addEventListener('click',function(e){
   if(ciBtn){
     document.querySelector('.cib-type-popup')?.remove();
     const afterC=parseInt(ciBtn.dataset.after);
+    if(_selectedCol!==null&&_selectedCol>afterC)_selectedCol++;
     for(let r=0;r<model.rows;r++) model.cellData[r].splice(afterC+1,0,'文本');
     model.cols++;
     model.colTypes.splice(afterC+1,0,'text');
@@ -843,15 +862,22 @@ document.getElementById('previewWrap').addEventListener('click',function(e){
     model.colProps.splice(afterC+1,0,{});
     shiftCustomCols(afterC+1,1);
     document.getElementById('cCols').value=model.cols;
-    render();
+    _flashCol=afterC+1;render();
     return;
   }
 
   const rh=e.target.closest('.rh-cell'),ch=e.target.closest('.ch-cell');
-  if (!rh&&!ch){_selectedRow=null;_selectedCol=null;const p=document.querySelector('.handle-popup');if(p)p.remove();return;}
+  if (!rh&&!ch){
+    if(_selectedRow!==null||_selectedCol!==null){_selectedRow=null;_selectedCol=null;render();}
+    const p=document.querySelector('.handle-popup');if(p)p.remove();return;}
   document.querySelectorAll('.handle-popup').forEach(p=>p.remove());
   if(rh){_selectedRow=+rh.dataset.r;_selectedCol=null;}
   if(ch){_selectedCol=+ch.dataset.c;_selectedRow=null;}
+  // Render to show selection highlight, then re-find handle DOM elements
+  render();
+  // Re-query handles after render (previous references are stale)
+  const rh2=rh?document.querySelector(`.rh-cell[data-r="${_selectedRow}"]`):null;
+  const ch2=ch?document.querySelector(`.ch-cell[data-c="${_selectedCol}"]`):null;
   
   function positionPopup(p,anchor){
     const aR=anchor.getBoundingClientRect(),pR=p.getBoundingClientRect();
@@ -869,8 +895,8 @@ document.getElementById('previewWrap').addEventListener('click',function(e){
     setup&&setup(p);
   }
 
-  if(rh){
-    const r=+rh.dataset.r,va=model.rowAlign[r]||'top';
+  if(rh2){
+    const r=+rh2.dataset.r,va=model.rowAlign[r]||'top';
     makePopup(`
       <button data-action="add-row-above" data-r="${r}" title="上方插入"><i data-lucide="arrow-up-to-line" style="width:13px;height:13px"></i></button>
       <button data-action="add-row-below" data-r="${r}" title="下方插入"><i data-lucide="arrow-down-to-line" style="width:13px;height:13px"></i></button>
@@ -884,16 +910,16 @@ document.getElementById('previewWrap').addEventListener('click',function(e){
       p.addEventListener('click',e2=>{
         const b=e2.target.closest('button');if(!b)return;
         const a=b.dataset.action,rr=+b.dataset.r;
-        if(a==='add-row-above'){model.cellData.splice(rr,0,Array(model.cols).fill('文本'));model.rows++;document.getElementById('cRows').value=model.rows;render();}
-        else if(a==='add-row-below'){model.cellData.splice(rr+1,0,Array(model.cols).fill('文本'));model.rows++;document.getElementById('cRows').value=model.rows;render();}
-        else if(a==='dup-row'){model.cellData.splice(rr+1,0,[...model.cellData[rr]]);model.rows++;document.getElementById('cRows').value=model.rows;render();}
-        else if(a==='del-row'){if(model.rows<=1){showToast('至少保留一行','error');return;}model.cellData.splice(rr,1);model.rows--;document.getElementById('cRows').value=model.rows;p.remove();render();}
+        if(a==='add-row-above'){if(_selectedRow!==null&&_selectedRow>=rr)_selectedRow++;model.cellData.splice(rr,0,Array(model.cols).fill('文本'));model.rows++;document.getElementById('cRows').value=model.rows;_flashRow=rr;render();}
+        else if(a==='add-row-below'){if(_selectedRow!==null&&_selectedRow>rr)_selectedRow++;model.cellData.splice(rr+1,0,Array(model.cols).fill('文本'));model.rows++;document.getElementById('cRows').value=model.rows;_flashRow=rr+1;render();}
+        else if(a==='dup-row'){if(_selectedRow!==null&&_selectedRow>rr)_selectedRow++;model.cellData.splice(rr+1,0,[...model.cellData[rr]]);model.rows++;document.getElementById('cRows').value=model.rows;_flashRow=rr+1;render();}
+        else if(a==='del-row'){if(model.rows<=1){showToast('至少保留一行','error');return;}if(_selectedRow!==null){if(_selectedRow===rr)_selectedRow=null;else if(_selectedRow>rr)_selectedRow--;}model.cellData.splice(rr,1);model.rows--;document.getElementById('cRows').value=model.rows;p.remove();render();}
         else if(a==='row-align'){const nv=b.dataset.v===model.rowAlign[rr]?'':b.dataset.v;model.rowAlign[rr]=nv;p.querySelectorAll('[data-action="row-align"]').forEach(btn=>btn.classList.toggle('hp-active',btn.dataset.v===nv));render();}
       });
-    },rh);
+    },rh2);
   }
-  if(ch){
-    const c=+ch.dataset.c,ha=model.colAlign[c]||'',tc=model.colTypes[c]||'text',wv=model.columnWidths[c]||model.colWidth;
+  if(ch2){
+    const c=+ch2.dataset.c,ha=model.colAlign[c]||'',tc=model.colTypes[c]||'text',wv=model.columnWidths[c]||model.colWidth;
     makePopup(`
       <button data-action="add-col-left" data-c="${c}" title="左侧插入"><i data-lucide="arrow-left-to-line" style="width:13px;height:13px"></i></button>
       <button data-action="add-col-right" data-c="${c}" title="右侧插入"><i data-lucide="arrow-right-to-line" style="width:13px;height:13px"></i></button>
@@ -922,14 +948,14 @@ document.getElementById('previewWrap').addEventListener('click',function(e){
       p.addEventListener('click',e2=>{
         const b=e2.target.closest('button');if(!b)return;
         const a=b.dataset.action,cc=+b.dataset.c;
-        if(a==='add-col-left'){for(let r=0;r<model.rows;r++)model.cellData[r].splice(cc,0,'文本');model.colTypes.splice(cc,0,'text');model.colAlign.splice(cc,0,'');model.columnWidths.splice(cc,0,model.colWidth);shiftCustomCols(cc,1);model.cols++;document.getElementById('cCols').value=model.cols;render();}
-        else if(a==='add-col-right'){for(let r=0;r<model.rows;r++)model.cellData[r].splice(cc+1,0,'文本');model.colTypes.splice(cc+1,0,'text');model.colAlign.splice(cc+1,0,'');model.columnWidths.splice(cc+1,0,model.colWidth);shiftCustomCols(cc+1,1);model.cols++;document.getElementById('cCols').value=model.cols;render();}
-        else if(a==='dup-col'){for(let r=0;r<model.rows;r++)model.cellData[r].splice(cc+1,0,model.cellData[r][cc]);model.colTypes.splice(cc+1,0,model.colTypes[cc]);model.colAlign.splice(cc+1,0,'');model.columnWidths.splice(cc+1,0,model.columnWidths[cc]||model.colWidth);shiftCustomCols(cc+1,1);model.cols++;document.getElementById('cCols').value=model.cols;render();}
-        else if(a==='del-col'){if(model.cols<=1){showToast('至少保留一行','error');return;}for(let r=0;r<model.rows;r++)model.cellData[r].splice(cc,1);model.colTypes.splice(cc,1);model.colAlign.splice(cc,1);model.columnWidths.splice(cc,1);removeCustomCol(cc);model.cols--;document.getElementById('cCols').value=model.cols;p.remove();render();}
+        if(a==='add-col-left'){if(_selectedCol!==null&&_selectedCol>=cc)_selectedCol++;for(let r=0;r<model.rows;r++)model.cellData[r].splice(cc,0,'文本');model.colTypes.splice(cc,0,'text');model.colAlign.splice(cc,0,'');model.columnWidths.splice(cc,0,model.colWidth);shiftCustomCols(cc,1);model.cols++;document.getElementById('cCols').value=model.cols;_flashCol=_selectedCol-1;render();}
+        else if(a==='add-col-right'){if(_selectedCol!==null&&_selectedCol>cc)_selectedCol++;for(let r=0;r<model.rows;r++)model.cellData[r].splice(cc+1,0,'文本');model.colTypes.splice(cc+1,0,'text');model.colAlign.splice(cc+1,0,'');model.columnWidths.splice(cc+1,0,model.colWidth);shiftCustomCols(cc+1,1);model.cols++;document.getElementById('cCols').value=model.cols;_flashCol=_selectedCol+1;render();}
+        else if(a==='dup-col'){if(_selectedCol!==null&&_selectedCol>cc)_selectedCol++;for(let r=0;r<model.rows;r++)model.cellData[r].splice(cc+1,0,model.cellData[r][cc]);model.colTypes.splice(cc+1,0,model.colTypes[cc]);model.colAlign.splice(cc+1,0,'');model.columnWidths.splice(cc+1,0,model.columnWidths[cc]||model.colWidth);shiftCustomCols(cc+1,1);model.cols++;document.getElementById('cCols').value=model.cols;_flashCol=_selectedCol+1;render();}
+        else if(a==='del-col'){if(model.cols<=1){showToast('至少保留一行','error');return;}if(_selectedCol!==null){if(_selectedCol===cc)_selectedCol=null;else if(_selectedCol>cc)_selectedCol--;}for(let r=0;r<model.rows;r++)model.cellData[r].splice(cc,1);model.colTypes.splice(cc,1);model.colAlign.splice(cc,1);model.columnWidths.splice(cc,1);removeCustomCol(cc);model.cols--;document.getElementById('cCols').value=model.cols;p.remove();render();}
         else if(a==='col-align'){const nv=b.dataset.v===model.colAlign[cc]?'':b.dataset.v;model.colAlign[cc]=nv;p.querySelectorAll('[data-action="col-align"]').forEach(btn=>btn.classList.toggle('hp-active',btn.dataset.v===nv));render();}
         else if(a==='col-type'){model.colTypes[cc]=b.dataset.v;if(model.hasHeader&&model.cellData[0]){if(b.dataset.v==='radio')model.cellData[0][cc]='单选';else if(b.dataset.v==='checkbox')model.cellData[0][cc]='选择';else if(b.dataset.v==='index')model.cellData[0][cc]='序号';}const cw=model.columnWidths[cc]||model.colWidth;const minW=b.dataset.v==='progress'?120:b.dataset.v==='tag'?100:b.dataset.v==='action'?120:b.dataset.v==='index'?48:model.colWidth;if(cw<minW){model.columnWidths[cc]=minW;}if(!model._customCols)model._customCols=new Set();model._customCols.add(cc);p.querySelectorAll('[data-action="col-type"]').forEach(btn=>btn.classList.toggle('hp-active',btn.dataset.v===b.dataset.v));render();}
       });
-    },ch);
+    },ch2);
   }
 });
 
@@ -1033,7 +1059,7 @@ let _citimer=null;
 document.addEventListener('mouseover',function(e){
   const p=document.querySelector('.cib-type-popup');
   if(!p)return;
-  if(!e.target.closest('.cib-type-popup')&&!e.target.closest('.cib-btn')){
+  if(!e.target.closest('.cib-type-popup')&&!e.target.closest('.cib-hit')){
     if(_citimer)clearTimeout(_citimer);
     _citimer=setTimeout(()=>{const el=document.querySelector('.cib-type-popup');if(el)el.remove();},200);
   }else{if(_citimer){clearTimeout(_citimer);_citimer=null;}}

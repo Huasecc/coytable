@@ -1,11 +1,6 @@
 node_modules/
 .DS_Store
 *.log
-ui.html
-code.js
-manifest.json
-icon.png
 CoyTable-Cover.png
 REVIEW.md
 PUBLISH_GUIDE.md
-fix_unicode.js

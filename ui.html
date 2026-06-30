@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -145,6 +145,22 @@ body { display:flex; flex-direction:column; }
 .window-resize-handle { position:fixed; bottom:0; right:0; width:16px; height:16px; cursor:nwse-resize; z-index:100; }
 .window-resize-handle .r2 { position:absolute; bottom:2px; right:2px; width:8px; height:8px; border-right:2px solid var(--border); border-bottom:2px solid var(--border); }
 .window-resize-handle:hover .r2 { border-color:var(--muted-fg); }
+
+/* Column config overlay */
+.col-config-overlay { position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.25); display:flex; align-items:center; justify-content:center; }
+.col-config-modal { background:var(--card); border:1px solid var(--border); border-radius:10px; box-shadow:0 8px 32px rgba(0,0,0,.18); min-width:280px; max-width:400px; }
+.col-config-body { padding:16px 20px; }
+.col-config-body code { font-size:10px; background:var(--muted); padding:1px 5px; border-radius:3px; color:var(--fg); }
+#acBtnList::-webkit-scrollbar { width:5px; }
+#acBtnList::-webkit-scrollbar-track { background:transparent; }
+#acBtnList::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+#acBtnList::-webkit-scrollbar-thumb:hover { background:var(--muted-fg); }
+
+/* Tag editor popup */
+.tag-editor-popup { position:fixed; z-index:10000; background:var(--card); border:1px solid var(--border); border-radius:10px; box-shadow:0 4px 20px rgba(0,0,0,.2); }
+.tag-editor-popup .te-swatch:hover { transform:scale(1.2); }
+.tag-editor-popup .te-custom-color::-webkit-color-swatch-wrapper { padding:0; }
+.tag-editor-popup .te-custom-color::-webkit-color-swatch { border:none; border-radius:50%; }
 
 /* Help button */
 .help-btn { width:24px; height:24px; border-radius:50%; border:1px solid var(--border); background:var(--card); color:var(--muted-fg); font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .15s; line-height:1; flex-shrink:0; }
@@ -325,12 +341,12 @@ body { display:flex; flex-direction:column; }
           </div>
           <div class="ctrl-field-inline">
             <div class="ctrl-field">
-              <span class="ctrl-field-label">内边距</span>
+              <span class="ctrl-field-label">内描边颜色</span>
               <div class="ctrl-color-wrap"><input class="ctrl-color" id="cBorderColor" type="color" value="#E4E4E7">
               <input class="ctrl-hex-input" id="cBorderColorHex" value="#E4E4E7"></div>
             </div>
             <div class="ctrl-field">
-              <span class="ctrl-field-label">外边距</span>
+              <span class="ctrl-field-label">外描边颜色</span>
               <div class="ctrl-color-wrap"><input class="ctrl-color" id="cOuterBorderColor" type="color" value="#D4D4D8">
               <input class="ctrl-hex-input" id="cOuterBorderColorHex" value="#D4D4D8"></div>
             </div>
@@ -581,6 +597,17 @@ body { display:flex; flex-direction:column; }
           <li><span class="kbd">Ctrl</span> + 滚轮 — 缩放预览区（25%–400%）</li>
           <li><span class="kbd">Ctrl</span> + <span class="kbd">0</span> — 重置缩放为 100%</li>
         </ul>
+      </div>
+      <div class="section" data-i18n-help="donate">
+        <h4>赞赏一杯咖啡吧</h4>
+        <p style="margin-bottom:10px">如果 CoyTable 对你有帮助，欢迎请开发者喝杯咖啡 ☕</p>
+        <div style="text-align:center">
+          <svg width="140" height="140" viewBox="0 0 468 468" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:10px;border:1px solid var(--border);cursor:pointer;display:block;margin:0 auto" onclick="window.open('https://qr.alipay.com/fkx10668kquu0jgizd0sp19')"><g clip-path="url(#c)"><path d="M468 0H0V468H468V0Z" fill="white"/><path d="M96 408H60V372H96V408Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M120 432H36V348H120V432ZM48 420H108V360H48V420Z" fill="black"/><path d="M144 432H132V420H144V432Z" fill="black"/><path d="M204 432H192V420H204V432Z" fill="black"/><path d="M228 432H216V420H228V432Z" fill="black"/><path d="M360 360H348V348H360V360Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M360 192H348V216H336V228H348V216H360V240H372V252H348V240H336V252H348V276H336V288H348V300H336V324H372V288H384V312H396V324H384V336H396V348H384V372H396V384H384V396H396V384H408V408H384V432H372V384H336V396H348V408H324V396H312V408H324V420H312V432H252V420H276V408H252V420H228V408H204V384H228V372H240V408H252V372H240V360H252V348H240V300H264V312H276V324H252V336H264V372H276V324H288V312H300V300H312V324H300V336H312V324H324V288H312V276H324V240H312V228H324V204H336V192H324V180H348V168H360V192ZM288 408H300V372H288V408ZM312 384H324V372H312V384ZM336 372H372V336H336V372ZM288 360H300V348H288V360Z" fill="black"/><path d="M336 432H324V420H336V432Z" fill="black"/><path d="M420 420H432V432H396V420H408V408H420V420Z" fill="black"/><path d="M156 360H168V372H180V384H168V396H180V408H156V420H144V408H132V396H144V384H156V372H144V348H132V324H120V312H156V360Z" fill="black"/><path d="M192 420H180V408H192V420Z" fill="black"/><path d="M432 408H420V396H432V408Z" fill="black"/><path d="M144 384H132V372H144V384Z" fill="black"/><path d="M420 384H408V372H420V384Z" fill="black"/><path d="M228 348H216V360H228V372H180V360H204V336H228V348Z" fill="black"/><path d="M240 360H228V348H240V360Z" fill="black"/><path d="M432 360H396V348H408V336H432V360Z" fill="black"/><path d="M48 336H36V324H48V336Z" fill="black"/><path d="M120 336H84V324H120V336Z" fill="black"/><path d="M228 324H192V336H180V312H228V324Z" fill="black"/><path d="M408 336H396V324H408V336Z" fill="black"/><path d="M72 216H84V204H120V216H96V228H72V240H84V264H72V312H84V324H48V312H60V288H36V264H48V276H60V252H48V228H60V204H72V216Z" fill="black"/><path d="M48 312H36V300H48V312Z" fill="black"/><path d="M120 312H108V300H120V312Z" fill="black"/><path d="M192 264H180V276H168V288H180V312H168V300H120V288H156V264H168V252H192V264Z" fill="black"/><path d="M360 312H348V300H360V312Z" fill="black"/><path d="M432 276H420V288H432V312H408V264H420V252H408V240H432V276Z" fill="black"/><path d="M144 264H132V276H120V264H108V276H120V288H108V300H84V288H96V252H144V264Z" fill="black"/><path d="M228 300H192V288H228V300Z" fill="black"/><path d="M276 300H264V288H276V300Z" fill="black"/><path d="M300 300H288V288H300V300Z" fill="black"/><path d="M192 288H180V276H192V288Z" fill="black"/><path d="M396 288H384V276H396V288Z" fill="black"/><path d="M204 276H192V264H204V276Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M192 96H204V108H192V132H204V156H192V144H180V168H204V156H216V144H228V156H240V168H216V180H240V168H252V156H264V180H276V168H300V180H288V192H300V204H288V216H300V240H288V252H276V240H264V228H276V216H264V204H252V240H240V252H252V264H240V276H216V264H228V240H216V228H228V216H216V228H180V216H168V228H156V216H144V204H156V192H168V204H180V180H156V156H168V144H156V156H144V132H156V108H168V120H180V108H168V96H156V84H192V96ZM204 216H216V204H204V216ZM192 204H204V180H192V204ZM240 192H252V180H240V192Z" fill="black"/><path d="M384 276H360V264H384V276Z" fill="black"/><path d="M300 264H288V252H300V264Z" fill="black"/><path d="M408 264H396V252H408V264Z" fill="black"/><path d="M168 252H144V240H168V252Z" fill="black"/><path d="M120 240H96V228H120V240Z" fill="black"/><path d="M144 228H120V216H144V228Z" fill="black"/><path d="M372 204H384V216H408V204H420V192H432V216H420V228H372V216H360V192H372V204Z" fill="black"/><path d="M60 204H48V216H36V192H60V204Z" fill="black"/><path d="M312 216H300V204H312V216Z" fill="black"/><path d="M120 168H108V180H132V192H144V204H120V192H84V180H96V156H120V168Z" fill="black"/><path d="M324 204H312V192H324V204Z" fill="black"/><path d="M408 204H396V192H408V204Z" fill="black"/><path d="M156 192H144V180H156V192Z" fill="black"/><path d="M312 192H300V180H312V192Z" fill="black"/><path d="M396 192H384V180H396V192Z" fill="black"/><path d="M432 180H420V192H408V168H432V180Z" fill="black"/><path d="M48 144H60V156H84V180H36V132H48V144Z" fill="black"/><path d="M144 180H132V156H144V180Z" fill="black"/><path d="M324 180H312V168H324V180Z" fill="black"/><path d="M384 180H372V168H384V180Z" fill="black"/><path d="M312 132H300V144H312V168H300V156H276V132H288V120H300V108H312V132Z" fill="black"/><path d="M336 144H372V168H360V156H348V168H336V156H324V108H336V144Z" fill="black"/><path d="M408 168H396V156H408V168Z" fill="black"/><path d="M132 156H120V144H132V156Z" fill="black"/><path d="M288 60H264V96H276V72H288V84H336V96H324V108H312V96H300V108H288V120H276V108H264V120H276V132H252V156H240V144H228V132H240V120H252V96H240V120H228V108H216V96H228V60H252V48H228V36H288V60Z" fill="black"/><path d="M420 144H432V156H408V132H420V144Z" fill="black"/><path d="M72 144H60V132H72V144Z" fill="black"/><path d="M96 144H84V132H96V144Z" fill="black"/><path d="M120 144H108V132H120V144Z" fill="black"/><path d="M384 144H372V132H384V144Z" fill="black"/><path d="M216 120H228V132H204V108H216V120Z" fill="black"/><path d="M96 96H60V60H96V96Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M120 120H36V36H120V120ZM48 108H108V48H48V108Z" fill="black"/><path d="M144 120H132V108H144V120Z" fill="black"/><path d="M408 96H372V60H408V96Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M432 120H348V36H432V120ZM360 108H420V48H360V108Z" fill="black"/><path d="M156 108H144V96H156V108Z" fill="black"/><path d="M144 96H132V84H144V96Z" fill="black"/><path d="M216 96H204V84H192V60H204V48H192V36H216V96Z" fill="black"/><path d="M156 84H144V60H156V84Z" fill="black"/><path d="M168 48H180V72H168V60H156V36H168V48Z" fill="black"/><path d="M144 60H132V48H144V60Z" fill="black"/><path d="M324 60H300V36H324V60Z" fill="black"/></g><defs><clipPath id="c"><rect width="468" height="468" fill="white"/></clipPath></defs></svg>
+          <div style="display:flex;align-items:center;justify-content:center;gap:4px;margin-top:6px;font-size:11px;color:var(--muted-fg)">
+            <svg width="16" height="16" fill="#1677FF" viewBox="0 0 16 16"><path d="M2.541 0H13.5a2.55 2.55 0 0 1 2.54 2.563v8.297c-.006 0-.531-.046-2.978-.813-.412-.14-.916-.327-1.479-.536q-.456-.17-.957-.353a13 13 0 0 0 1.325-3.373H8.822V4.649h3.831v-.634h-3.83V2.121H7.26c-.274 0-.274.273-.274.273v1.621H3.11v.634h3.875v1.136h-3.2v.634H9.99c-.227.789-.532 1.53-.894 2.202-2.013-.67-4.161-1.212-5.51-.878-.864.214-1.42.597-1.746.998-1.499 1.84-.424 4.633 2.741 4.633 1.872 0 3.675-1.053 5.072-2.787 2.08 1.008 6.37 2.738 6.387 2.745v.105A2.55 2.55 0 0 1 13.5 16H2.541A2.55 2.55 0 0 1 0 13.437V2.563A2.55 2.55 0 0 1 2.541 0"/><path d="M2.309 9.27c-1.22 1.073-.49 3.034 1.978 3.034 1.434 0 2.868-.925 3.994-2.406-1.602-.789-2.959-1.353-4.425-1.207-.397.04-1.14.217-1.547.58Z"/></svg>
+            支付宝
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -880,6 +907,340 @@ function shiftCustomCols(from,delta){if(!model._customCols)return;const ns=new S
 function removeCustomCol(idx){if(!model._customCols)return;model._customCols.delete(idx);const ns=new Set();for(const v of model._customCols)ns.add(v>idx?v-1:v);model._customCols=ns;}
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 
+function showColConfig(colIdx){
+  const type=model.colTypes[colIdx]||'text';
+  const overlay=document.createElement('div');
+  overlay.className='col-config-overlay';
+  let bodyHtml='';
+  if(type==='action'){
+    const props=model.colProps[colIdx]||{};
+    const count=parseInt(props.actionCount)||2;
+    const labels=props.actionLabels||['编辑','删除'];
+    const styles=props.actionStyles||[];
+    let btnPanels='';
+    for(let i=0;i<Math.max(count,1);i++){
+      const lb=labels[i]||'更多';
+      const as=styles[i]||{};
+      const ac=as.color||'#007ffc',af=as.style==='filled';
+      const sw=TAG_PRESET_COLORS.map(c2=>'<button class="ac-swatch" data-idx="'+i+'" data-c="'+c2+'" style="width:16px;height:16px;border-radius:50%;border:2px solid '+(ac.toUpperCase()===c2.toUpperCase()?'var(--primary)':'transparent')+';background:'+c2+';cursor:pointer;padding:0;transition:all .1s;flex-shrink:0" title="'+c2+'"></button>').join('');
+      btnPanels+='<div class="ac-panel" data-idx="'+i+'" style="border:1px solid var(--border);border-radius:6px;padding:14px;margin-top:12px">'+
+        '<div style="font-size:11px;font-weight:600;color:var(--muted-fg);margin-bottom:10px">按钮 '+(i+1)+'</div>'+
+        '<div style="display:flex;gap:12px;margin-bottom:14px">'+
+          '<div style="flex:1;min-width:0">'+
+            '<div style="font-size:10px;color:var(--muted-fg);margin-bottom:4px">按钮文案</div>'+
+            '<input class="ctrl-input ac-label" data-idx="'+i+'" value="'+esc(lb)+'" style="width:100%">'+
+          '</div>'+
+          '<div style="flex:1;min-width:0">'+
+            '<div style="font-size:10px;color:var(--muted-fg);margin-bottom:4px">自定义色值</div>'+
+            '<div style="position:relative;display:flex;align-items:center">'+
+              '<input type="color" class="ctrl-color ac-hex-picker" data-idx="'+i+'" style="position:absolute;left:8px;top:50%;transform:translateY(-50%);width:14px;height:14px;padding:0;border:1.5px solid var(--border);border-radius:50%;cursor:pointer;z-index:1" value="'+ac+'">'+
+              '<input class="ctrl-hex-input ac-hex" data-idx="'+i+'" style="padding-left:32px;width:100%;height:28px;border:1px solid var(--border);border-radius:6px;font-family:monospace;font-size:11px;background:var(--bg);color:var(--fg);outline:none;box-sizing:border-box" placeholder="#RRGGBB" value="'+ac+'">'+
+            '</div>'+
+          '</div>'+
+          '<div style="flex:1;min-width:0">'+
+            '<div style="font-size:10px;color:var(--muted-fg);margin-bottom:4px">按钮风格</div>'+
+            '<div class="tgl-switch" style="width:100%;border-radius:4px">'+
+              '<button class="ac-style'+(af?'':' active')+'" data-idx="'+i+'" data-v="ghost" style="border-radius:3px">浅底</button>'+
+              '<button class="ac-style'+(af?' active':'')+'" data-idx="'+i+'" data-v="filled" style="border-radius:3px">实心</button>'+
+            '</div>'+
+          '</div>'+
+        '</div>'+
+        '<div>'+
+          '<div style="font-size:10px;color:var(--muted-fg);margin-bottom:4px">推荐色值</div>'+
+          '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">'+sw+'</div>'+
+        '</div>'+
+      '</div>';
+    }
+    bodyHtml=`
+      <div style="font-size:12px;font-weight:600;margin-bottom:14px">操作列配置</div>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px">
+        <span style="font-size:11px;color:var(--muted-fg)">按钮数量</span>
+        <input type="number" class="ctrl-input ctrl-input-num ac-count" value="${count}" min="1" max="5" style="width:60px">
+      </div>
+      <div id="acBtnList" style="max-height:320px;overflow-y:auto">${btnPanels}</div>
+      <div style="display:flex;gap:6px;margin-top:18px;justify-content:flex-end">
+        <button class="btn btn-secondary btn-sm" id="acCancel">取消</button>
+        <button class="btn btn-primary btn-sm" id="acSave">保存</button>
+      </div>`;
+  }else if(type==='tag'){
+    // Use the same visual tag editor but without cell context — just show a hint
+    bodyHtml=`
+      <div style="font-size:12px;font-weight:600;margin-bottom:8px">标签列配置</div>
+      <p style="font-size:11px;color:var(--muted-fg);margin:0 0 6px">点击任意标签单元格即可使用可视化编辑器选择颜色和风格。</p>
+      <div style="display:flex;gap:6px;margin-top:10px;justify-content:flex-end">
+        <button class="btn btn-secondary btn-sm" id="acCancel">关闭</button>
+      </div>`;
+  }else{
+    overlay.remove();
+    return;
+  }
+  overlay.innerHTML=`
+    <div class="col-config-modal">
+      <div class="col-config-body">
+        ${bodyHtml}
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click',function(e){
+    if(e.target===overlay) overlay.remove();
+  });
+  const cancelBtn=overlay.querySelector('#acCancel');
+  if(cancelBtn) cancelBtn.addEventListener('click',()=>overlay.remove());
+  const saveBtn=overlay.querySelector('#acSave');
+  if(saveBtn){
+    saveBtn.addEventListener('click',function(){
+      const props=model.colProps[colIdx]=model.colProps[colIdx]||{};
+      const countInput=overlay.querySelector('.ac-count');
+      if(countInput) props.actionCount=Math.max(1,Math.min(5,parseInt(countInput.value)||2));
+      const labelInputs=overlay.querySelectorAll('.ac-label');
+      if(labelInputs.length>0){
+        props.actionLabels=[];
+        props.actionStyles=[];
+        labelInputs.forEach(inp=>{
+          const idx=parseInt(inp.dataset.idx);
+          props.actionLabels[idx]=inp.value.trim()||'更多';
+          // Read color & style from the same panel
+          const panel=inp.closest('.ac-panel');
+          const picker=panel?.querySelector('.ac-hex-picker');
+          const styleBtn=panel?.querySelector('.ac-style.active');
+          const s=props.actionStyles[idx]=props.actionStyles[idx]||{};
+          if(picker){s.color=picker.value;}
+          if(styleBtn){s.style=styleBtn.dataset.v;}
+        });
+      }
+      overlay.remove();
+      render();
+    });
+  }
+  const countInput=overlay.querySelector('.ac-count');
+  if(countInput){
+    countInput.addEventListener('change',function(){
+      const n=Math.max(1,Math.min(5,parseInt(this.value)||2));
+      const container=overlay.querySelector('#acBtnList');
+      const labels=model.colProps[colIdx]?.actionLabels||['编辑','删除'];
+      const styles=model.colProps[colIdx]?.actionStyles||[];
+      let html='';
+      for(let i=0;i<n;i++){
+        const lb=labels[i]||'更多';
+        const as=styles[i]||{};
+        const ac=as.color||'#007ffc',af=as.style==='filled';
+        const sw=TAG_PRESET_COLORS.map(c2=>'<button class="ac-swatch" data-idx="'+i+'" data-c="'+c2+'" style="width:16px;height:16px;border-radius:50%;border:2px solid '+(ac.toUpperCase()===c2.toUpperCase()?'var(--primary)':'transparent')+';background:'+c2+';cursor:pointer;padding:0;transition:all .1s;flex-shrink:0" title="'+c2+'"></button>').join('');
+        html+='<div class="ac-panel" data-idx="'+i+'" style="border:1px solid var(--border);border-radius:6px;padding:14px;margin-top:12px">'+
+          '<div style="font-size:11px;font-weight:600;color:var(--muted-fg);margin-bottom:10px">按钮 '+(i+1)+'</div>'+
+          '<div style="display:flex;gap:12px;margin-bottom:14px">'+
+            '<div style="flex:1;min-width:0">'+
+              '<div style="font-size:10px;color:var(--muted-fg);margin-bottom:4px">按钮文案</div>'+
+              '<input class="ctrl-input ac-label" data-idx="'+i+'" value="'+esc(lb)+'" style="width:100%">'+
+            '</div>'+
+            '<div style="flex:1;min-width:0">'+
+              '<div style="font-size:10px;color:var(--muted-fg);margin-bottom:4px">自定义色值</div>'+
+              '<div style="position:relative;display:flex;align-items:center">'+
+                '<input type="color" class="ctrl-color ac-hex-picker" data-idx="'+i+'" style="position:absolute;left:8px;top:50%;transform:translateY(-50%);width:14px;height:14px;padding:0;border:1.5px solid var(--border);border-radius:50%;cursor:pointer;z-index:1" value="'+ac+'">'+
+                '<input class="ctrl-hex-input ac-hex" data-idx="'+i+'" style="padding-left:32px;width:100%;height:28px;border:1px solid var(--border);border-radius:6px;font-family:monospace;font-size:11px;background:var(--bg);color:var(--fg);outline:none;box-sizing:border-box" placeholder="#RRGGBB" value="'+ac+'">'+
+              '</div>'+
+            '</div>'+
+            '<div style="flex:1;min-width:0">'+
+              '<div style="font-size:10px;color:var(--muted-fg);margin-bottom:4px">按钮风格</div>'+
+              '<div class="tgl-switch" style="width:100%;border-radius:4px">'+
+                '<button class="ac-style'+(af?'':' active')+'" data-idx="'+i+'" data-v="ghost" style="border-radius:3px">浅底</button>'+
+                '<button class="ac-style'+(af?' active':'')+'" data-idx="'+i+'" data-v="filled" style="border-radius:3px">实心</button>'+
+              '</div>'+
+            '</div>'+
+          '</div>'+
+          '<div>'+
+            '<div style="font-size:10px;color:var(--muted-fg);margin-bottom:4px">推荐色值</div>'+
+            '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">'+sw+'</div>'+
+          '</div>'+
+        '</div>';
+      }
+      container.innerHTML=html;
+    });
+  }
+  // Event delegation for color swatches, picker, hex, and style toggles inside overlay
+  overlay.addEventListener('input',function(e){
+    const hex=e.target.closest('.ac-hex');
+    if(hex){
+      let v=hex.value.trim();
+      if(v.startsWith('#'))v=v.slice(1);
+      if(/^[0-9a-fA-F]{6}$/.test(v)){
+        const full='#'+v.toLowerCase();
+        const panel=hex.closest('.ac-panel');
+        if(panel){
+          panel.querySelector('.ac-hex-picker').value=full;
+          panel.querySelectorAll('.ac-swatch').forEach(b=>b.style.borderColor=b.dataset.c===full?'var(--primary)':'transparent');
+        }
+        hex.value=full;
+      }else if(v.length===0||v.length>6){
+        hex.value=hex.closest('.ac-panel')?.querySelector('.ac-hex-picker')?.value||'#007ffc';
+      }
+    }
+    const picker=e.target.closest('.ac-hex-picker');
+    if(picker){
+      const panel=picker.closest('.ac-panel');
+      if(panel){
+        panel.querySelector('.ac-hex').value=picker.value;
+        panel.querySelectorAll('.ac-swatch').forEach(b=>b.style.borderColor=b.dataset.c.toUpperCase()===picker.value.toUpperCase()?'var(--primary)':'transparent');
+      }
+    }
+  });
+  overlay.addEventListener('click',function(e){
+    const swatch=e.target.closest('.ac-swatch');
+    if(swatch){
+      const c=swatch.dataset.c,idx=parseInt(swatch.dataset.idx);
+      const panel=swatch.closest('.ac-panel');
+      if(panel){
+        panel.querySelectorAll('.ac-swatch').forEach(b=>b.style.borderColor=b.dataset.c===c?'var(--primary)':'transparent');
+        panel.querySelector('.ac-hex-picker').value=c;
+        panel.querySelector('.ac-hex').value=c;
+      }
+    }
+    const styleBtn=e.target.closest('.ac-style');
+    if(styleBtn){
+      const panel=styleBtn.closest('.ac-panel');
+      if(panel){
+        panel.querySelectorAll('.ac-style').forEach(b=>b.classList.remove('active'));
+        styleBtn.classList.add('active');
+      }
+    }
+  });
+}
+
+const TAG_PRESET_COLORS=['#EF4444','#F97316','#EAB308','#22C55E','#06B6D4','#007ffc','#8B5CF6','#EC4899','#71717A'];
+function showTagEditor(r,c,anchorEl){
+  const val=(model.cellData[r]&&model.cellData[r][c])||'标签';
+  const parts=val.split('|');
+  let text=parts[0]||'标签',color=parts[1]||'#007ffc',style=parts[2]||'ghost';
+  if(!TAG_PRESET_COLORS.includes(color)&&!/^#[0-9a-f]{6}$/i.test(color))color='#007ffc';
+  const popup=document.createElement('div');
+  popup.className='tag-editor-popup';
+  const swatchesHtml=TAG_PRESET_COLORS.map(c2=>`<button class="te-swatch" data-c="${c2}" style="width:18px;height:18px;border-radius:50%;border:2px solid ${color.toUpperCase()===c2.toUpperCase()?'var(--primary)':'transparent'};background:${c2};cursor:pointer;padding:0;transition:all .1s;flex-shrink:0" title="${c2}"></button>`).join('');
+  popup.innerHTML=
+    '<div style="padding:14px 16px;min-width:220px">'+
+    '<div style="font-size:11px;font-weight:600;color:var(--fg);margin-bottom:12px">编辑标签</div>'+
+    '<div style="margin-bottom:10px">'+
+      '<label style="font-size:11px;color:var(--muted-fg);display:block;margin-bottom:4px">文本</label>'+
+      '<input class="ctrl-input te-text" value="'+esc(text)+'" style="width:100%">'+
+    '</div>'+
+    '<div style="margin-bottom:10px">'+
+      '<label style="font-size:11px;color:var(--muted-fg);display:block;margin-bottom:4px">颜色</label>'+
+      '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">'+
+        swatchesHtml+
+      '</div>'+
+      '<div style="margin-top:10px;position:relative;display:flex;align-items:center">'+
+        '<input type="color" class="ctrl-color te-hex-picker" style="position:absolute;left:8px;top:50%;transform:translateY(-50%);width:14px;height:14px;padding:0;border:1.5px solid var(--border);border-radius:50%;cursor:pointer;z-index:1" value="'+color+'">'+
+        '<input class="ctrl-hex-input te-hex" style="padding-left:32px;width:100%;height:28px;border:1px solid var(--border);border-radius:6px;font-family:monospace;font-size:11px;background:var(--bg);color:var(--fg);outline:none;box-sizing:border-box" placeholder="#RRGGBB" value="'+color+'">'+
+      '</div>'+
+    '</div>'+
+    '<div style="margin-bottom:10px">'+
+      '<label style="font-size:11px;color:var(--muted-fg);display:block;margin-bottom:4px">风格</label>'+
+      '<span class="tgl-switch" style="width:100%">'+
+        '<button class="te-style '+(style==='ghost'?'active':'')+'" data-v="ghost">浅底</button>'+
+        '<button class="te-style '+(style==='filled'?'active':'')+'" data-v="filled">实心</button>'+
+      '</span>'+
+    '</div>'+
+    '<div style="margin-bottom:10px;padding:8px;background:var(--muted);border-radius:6px;text-align:center;min-height:28px;display:flex;align-items:center;justify-content:center">'+
+      '<span id="tePreview" style="display:inline-flex;align-items:center;gap:5px;padding:2px 10px;border-radius:5px;font-size:11px;font-weight:500;background:'+(style==='filled'?color:color+'18')+';color:'+(style==='filled'?'#fff':color)+';border:1px solid '+(style==='filled'?color:color+'40')+';line-height:1.4">'+
+        '<span style="width:5px;height:5px;border-radius:50%;background:'+(style==='filled'?'rgba(255,255,255,.7)':color)+';flex-shrink:0"></span>'+
+        esc(text)+
+      '</span>'+
+    '</div>'+
+    '<div style="display:flex;gap:8px;justify-content:flex-end">'+
+      '<button class="btn btn-secondary btn-sm" id="teCancel">取消</button>'+
+      '<button class="btn btn-primary btn-sm" id="teSave">保存</button>'+
+    '</div>'+
+  '</div>';
+  document.body.appendChild(popup);
+  function posPopup(){
+    const cRect=anchorEl.getBoundingClientRect(),pRect=popup.getBoundingClientRect();
+    let top=cRect.bottom+4,left=cRect.left+(cRect.width-pRect.width)/2;
+    if(left+pRect.width>window.innerWidth-8) left=window.innerWidth-pRect.width-8;
+    if(left<8) left=8;
+    if(top+pRect.height>window.innerHeight-8) top=cRect.top-pRect.height-4;
+    if(top<4) top=4;
+    popup.style.top=top+'px';popup.style.left=left+'px';popup.style.bottom='auto';
+  }
+  requestAnimationFrame(posPopup);
+  function updatePreview(){
+    const t=popup.querySelector('.te-text').value.trim()||'标签';
+    const c=popup.querySelector('.te-hex-picker').value;
+    const s=(popup.querySelector('.te-style.active')?.dataset.v)||'ghost';
+    const pr=popup.querySelector('#tePreview');
+    pr.style.background=s==='filled'?c:c+'18';
+    pr.style.color=s==='filled'?'#fff':c;
+    pr.style.borderColor=s==='filled'?c:c+'40';
+    const dot=pr.querySelector('span');
+    if(dot)dot.style.background=s==='filled'?'rgba(255,255,255,.7)':c;
+    while(pr.childNodes.length>1)pr.removeChild(pr.lastChild);
+    pr.appendChild(document.createTextNode(t));
+  }
+  popup.querySelectorAll('.te-swatch').forEach(btn=>{
+    btn.addEventListener('click',function(){
+      const c2=this.dataset.c;
+      popup.querySelectorAll('.te-swatch').forEach(b=>b.style.borderColor=b.dataset.c.toUpperCase()===c2.toUpperCase()?'var(--primary)':'transparent');
+      popup.querySelector('.te-hex-picker').value=c2;
+      updatePreview();
+    });
+  });
+  popup.querySelector('.te-hex-picker').addEventListener('input',function(){
+    popup.querySelector('.te-hex').value=this.value;
+    popup.querySelectorAll('.te-swatch').forEach(b=>b.style.borderColor=b.dataset.c.toUpperCase()===this.value.toUpperCase()?'var(--primary)':'transparent');
+    updatePreview();
+  });
+  popup.querySelector('.te-hex').addEventListener('input',function(){
+    let v=this.value.trim();
+    if(v.startsWith('#'))v=v.slice(1);
+    if(/^[0-9a-fA-F]{6}$/.test(v)){
+      const full='#'+v.toLowerCase();
+      popup.querySelector('.te-hex-picker').value=full;
+      popup.querySelectorAll('.te-swatch').forEach(b=>b.style.borderColor=b.dataset.c===full?'var(--primary)':'transparent');
+      this.value=full;
+    }else if(v.length===0||v.length>6){
+      // Invalid — reset to current picker color
+      this.value=popup.querySelector('.te-hex-picker').value;
+    }
+    updatePreview();
+  });
+  popup.querySelectorAll('.te-style').forEach(btn=>{
+    btn.addEventListener('click',function(){
+      popup.querySelectorAll('.te-style').forEach(b=>b.classList.remove('active'));
+      this.classList.add('active');
+      updatePreview();
+    });
+  });
+  popup.querySelector('.te-text').addEventListener('input',updatePreview);
+  popup.querySelector('#teCancel').addEventListener('click',function(){
+    _closed=true;
+    document.removeEventListener('mousedown',closeHandler);
+    popup.remove();
+  });
+  popup.querySelector('#teSave').addEventListener('click',function(){
+    const t=popup.querySelector('.te-text').value.trim()||'标签';
+    const clr=popup.querySelector('.te-hex-picker').value;
+    const s=(popup.querySelector('.te-style.active')?.dataset.v)||'ghost';
+    model.cellData[r][c]=t+'|'+clr+'|'+s;
+    _closed=true;
+    document.removeEventListener('mousedown',closeHandler);
+    popup.remove();
+    if(_editingCell){_editingCell=null;}
+    render();
+  });
+  popup.addEventListener('mousedown',e=>e.stopPropagation());
+  // Close handler: close on outside mousedown
+  let _closed=false;
+  function closeHandler(e){
+    if(!popup.contains(e.target)&&!_closed){
+      _closed=true;
+      document.removeEventListener('mousedown',closeHandler);
+      popup.remove();
+      if(_editingCell){_editingCell=null;render();}
+    }
+  }
+  // Use capturing phase in next tick to avoid the current click event
+  setTimeout(function(){
+    if(!_closed)document.addEventListener('mousedown',closeHandler);
+  },0);
+}
+
 function renderCell(r,c,val){
   if (model.hasHeader&&r===0) return esc(val);
   const t=model.colTypes[c]||'text';
@@ -893,7 +1254,8 @@ function renderCell(r,c,val){
     case 'image': inner=`<span style="display:inline-flex;width:30px;height:30px;background:var(--muted);border-radius:6px;flex-shrink:0"></span>`;break;
     case 'progress': {const p=Math.min(100,Math.max(0,parseInt(val)||0)); inner=`<span style="display:inline-flex;align-items:center;gap:4px"><span style="width:60px;height:8px;background:#E4E4E7;border-radius:4px;overflow:hidden"><span style="width:${p}%;height:100%;background:var(--primary);border-radius:4px;display:block"></span></span><span style="font-size:10px;color:var(--muted-fg);white-space:nowrap">${p}%</span></span>`;break;}
     case 'tag': {const a=(val||'标签').split('|'),tt=a[0],tc=a[1]||'#007ffc',ts=a[2]||'ghost',fi=ts==='filled';inner=`<span style="display:inline-flex;align-items:center;gap:5px;padding:2px 10px;border-radius:5px;font-size:11px;font-weight:500;background:${fi?tc:tc+'18'};color:${fi?'#fff':tc};border:1px solid ${fi?tc:tc+'40'};line-height:1.4"><span style="width:5px;height:5px;border-radius:50%;background:${fi?'rgba(255,255,255,.7)':tc};flex-shrink:0"></span>${esc(tt)}</span>`;break;}
-    case 'action': {const n=parseInt(model.colProps[c]?.actionCount)||2,bt=[];for(let i=0;i<n;i++){const lb=(model.colProps[c]?.actionLabels&&model.colProps[c].actionLabels[i])||(i===0?'编辑':i===1?'删除':'更多');bt.push(`<span style="padding:0 8px;height:21px;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;font-size:11px;font-weight:500;background:var(--muted);color:var(--muted-fg);cursor:default;border:1px solid #E4E4E7;box-sizing:border-box">${lb}</span>`);}inner=`<span style="display:inline-flex;gap:8px;align-items:center">${bt.join('')}</span>`;break;}
+    case 'action': {const n=parseInt(model.colProps[c]?.actionCount)||2,bt=[],astyles=model.colProps[c]?.actionStyles||[];for(let i=0;i<n;i++){const lb=(model.colProps[c]?.actionLabels&&model.colProps[c].actionLabels[i])||(i===0?'编辑':i===1?'删除':'更多');const as=astyles[i]||{};
+const ac=as.color||'#007ffc',af=as.style==='filled';bt.push('<span style="padding:0 8px;height:21px;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;font-size:11px;font-weight:500;background:'+(af?ac:'var(--muted)')+';color:'+(af?'#fff':ac)+';cursor:default;border:1px solid '+(af?ac:ac+'40')+';box-sizing:border-box">'+lb+'</span>');}inner='<span style="display:inline-flex;gap:8px;align-items:center">'+bt.join('')+'</span>';break;}
     default: inner=esc(val);
   }
   if(t==='text') return inner;
@@ -1017,6 +1379,8 @@ document.getElementById('previewWrap').addEventListener('click',function(e){
       <button data-action="col-type" data-c="${c}" data-v="progress" class="hp-type-btn ${tc==='progress'?'hp-active':''}" title="进度"><i data-lucide="gauge" style="width:13px;height:13px"></i></button>
       <button data-action="col-type" data-c="${c}" data-v="tag" class="hp-type-btn ${tc==='tag'?'hp-active':''}" title="标签"><i data-lucide="tag" style="width:13px;height:13px"></i></button>
       <button data-action="col-type" data-c="${c}" data-v="action" class="hp-type-btn ${tc==='action'?'hp-active':''}" title="操作"><i data-lucide="wrench" style="width:13px;height:13px"></i></button>
+      ${tc==='action'||tc==='tag'?`<div class="hp-divider"></div>
+      <button data-action="col-config" data-c="${c}" title="列配置" style="color:var(--primary)"><i data-lucide="settings" style="width:13px;height:13px"></i></button>`:''}
     `,p=>{
       const wi=p.querySelector('.hp-width-input');
       if(wi){
@@ -1037,7 +1401,8 @@ document.getElementById('previewWrap').addEventListener('click',function(e){
         else if(a==='dup-col'){if(_selectedCol!==null&&_selectedCol>cc)_selectedCol++;for(let r=0;r<model.rows;r++)model.cellData[r].splice(cc+1,0,model.cellData[r][cc]);model.colTypes.splice(cc+1,0,model.colTypes[cc]);model.colAlign.splice(cc+1,0,'');model.columnWidths.splice(cc+1,0,model.columnWidths[cc]||model.colWidth);shiftCustomCols(cc+1,1);model.cols++;document.getElementById('cCols').value=model.cols;_flashCol=_selectedCol+1;render();_reopenPopup();}
         else if(a==='del-col'){if(model.cols<=1){showToast('至少保留一行','error');return;}if(_selectedCol!==null){if(_selectedCol===cc)_selectedCol=null;else if(_selectedCol>cc)_selectedCol--;}for(let r=0;r<model.rows;r++)model.cellData[r].splice(cc,1);model.colTypes.splice(cc,1);model.colAlign.splice(cc,1);model.columnWidths.splice(cc,1);removeCustomCol(cc);model.cols--;document.getElementById('cCols').value=model.cols;render();}
         else if(a==='col-align'){const nv=b.dataset.v===model.colAlign[cc]?'':b.dataset.v;model.colAlign[cc]=nv;render();_reopenPopup();}
-        else if(a==='col-type'){model.colTypes[cc]=b.dataset.v;if(model.hasHeader&&model.cellData[0]){if(b.dataset.v==='radio')model.cellData[0][cc]='单选';else if(b.dataset.v==='checkbox')model.cellData[0][cc]='选择';else if(b.dataset.v==='index')model.cellData[0][cc]='序号';}const cw=model.columnWidths[cc]||model.colWidth;const minW=b.dataset.v==='progress'?120:b.dataset.v==='tag'?100:b.dataset.v==='action'?120:b.dataset.v==='index'?48:model.colWidth;if(cw<minW){model.columnWidths[cc]=minW;}if(!model._customCols)model._customCols=new Set();model._customCols.add(cc);render();_reopenPopup();}
+        else if(a==='col-type'){model.colTypes[cc]=b.dataset.v;if(model.hasHeader&&model.cellData[0]){if(b.dataset.v==='radio')model.cellData[0][cc]='单选';else if(b.dataset.v==='checkbox')model.cellData[0][cc]='选择';else if(b.dataset.v==='index')model.cellData[0][cc]='序号';else if(b.dataset.v==='progress')model.cellData[0][cc]='进度';else if(b.dataset.v==='tag')model.cellData[0][cc]='标签';else if(b.dataset.v==='action')model.cellData[0][cc]='操作';}const cw=model.columnWidths[cc]||model.colWidth;const minW=b.dataset.v==='progress'?120:b.dataset.v==='tag'?100:b.dataset.v==='action'?120:b.dataset.v==='index'?48:model.colWidth;if(cw<minW){model.columnWidths[cc]=minW;}if(!model._customCols)model._customCols=new Set();model._customCols.add(cc);render();_reopenPopup();}
+        else if(a==='col-config'){showColConfig(cc);p.remove();}
       });
     },ch2);
   }
@@ -1061,17 +1426,25 @@ let _editingCell=null;
 function startEdit(cell){
   if(!cell||cell.classList.contains('editing'))return;
   const r=+cell.dataset.r,c=+cell.dataset.c;
-  // Only 'text' type columns support inline cell editing
   const colType=model.colTypes[c]||'text';
-  if(colType!=='text')return;
+  // Only text, progress types support inline cell editing (tag uses popup)
+  if(colType!=='text'&&colType!=='progress')return;
+  const isHeader=model.hasHeader&&r===0;
+  if(!isHeader&&colType!=='text'&&colType!=='progress')return;
   if(_editingCell)_saveEdit(_editingCell);
+  const isProgress=!isHeader&&colType==='progress';
   const inp=document.createElement('input');
-  inp.type='text';inp.value=(model.cellData[r]&&model.cellData[r][c])||'';
+  if(isProgress){
+    inp.type='number';inp.min='0';inp.max='100';inp.step='1';
+    inp.value=(model.cellData[r]&&model.cellData[r][c])||'0';
+  }else{
+    inp.type='text';inp.value=(model.cellData[r]&&model.cellData[r][c])||'';
+  }
   inp.style.cssText='width:100%;height:100%;border:none;outline:none;background:transparent;font:inherit;color:inherit;text-align:inherit;padding:0;margin:0';
   inp.dataset.r=r;inp.dataset.c=c;
   cell.textContent='';cell.appendChild(inp);cell.classList.add('editing');
-  inp.focus();inp.select();_editingCell=cell;
-  inp.addEventListener('blur',function(){if(_editingCell===cell)_saveEdit(cell);});
+  inp.focus();if(!isProgress)inp.select();_editingCell=cell;
+  inp.addEventListener('blur',function(){if(_editingCell===cell){_saveEdit(cell);render();}});
   inp.addEventListener('keydown',ek=>{
     if(ek.key==='Enter'){ek.preventDefault();_saveEdit(cell);render();}
     if(ek.key==='Escape'){_editingCell=null;cell.classList.remove('editing');render();}
@@ -1094,7 +1467,10 @@ function _saveEdit(cell){
   if(!cell)return;
   const inp=cell.querySelector('input');
   if(inp){
-    const rr=+inp.dataset.r,cc=+inp.dataset.c,v=inp.value.trim();
+    const rr=+inp.dataset.r,cc=+inp.dataset.c,ct=model.colTypes[cc]||'text';
+    const isH=model.hasHeader&&rr===0;
+    let v=inp.value.trim();
+    if(!isH&&ct==='progress'){const n=parseInt(v);v=isNaN(n)?'0':String(Math.max(0,Math.min(100,n)));}
     if(!model.cellData[rr])model.cellData[rr]=[];
     model.cellData[rr][cc]=v||(model.hasHeader&&rr===0?`列${cc+1}`:'文本');
   }
@@ -1112,7 +1488,7 @@ document.getElementById('previewWrap').addEventListener('click',function(e){
     const colType=model.colTypes[c]||'text';
 
     // Display-only column types (structured/auto data — no text editing)
-    if(colType==='index'||colType==='action'||colType==='image'||colType==='tag'||colType==='progress'){
+    if(colType==='index'||colType==='action'||colType==='image'){
       if(_editingCell){stopEdit(_editingCell);}else{render();}
       return;
     }
@@ -1124,6 +1500,17 @@ document.getElementById('previewWrap').addEventListener('click',function(e){
       if(!model.cellData[r])model.cellData[r]=[];
       model.cellData[r][c]=model.cellData[r][c]==='1'?'0':'1';
       render();
+      return;
+    }
+
+    // Tag type: show visual editor popup
+    if(colType==='tag'&&!(r===0&&model.hasHeader)){
+      if(_editingCell){_saveEdit(_editingCell);render();}
+      requestAnimationFrame(()=>{
+        const ncell=document.querySelector(`.ct-cell[data-r="${r}"][data-c="${c}"]`);
+        if(ncell)showTagEditor(r,c,ncell);
+        else showTagEditor(r,c,cell);
+      });
       return;
     }
 
@@ -1552,7 +1939,7 @@ const _i18n={zh:{
   collapseSize:'表格尺寸',collapseGlobal:'全局样式',collapseHeader:'表头样式',collapseCell:'单元格样式',collapseZebra:'斑马纹',collapseTemplates:'预设样式',collapseFillData:'预设数据',
   rows:'行数',cols:'列数',rowH:'行高',colW:'列宽',tableW:'表宽',tableH:'表高',
   fixed:'固定',fill:'填充',
-  radius:'圆角',innerBorder:'内边距',outerBorder:'外边距',innerBW:'内边框宽',outerBW:'外边框宽',fontSize:'字号',header:'表头',show:'显示',hide:'隐藏',
+  radius:'圆角',innerBorder:'内描边颜色',outerBorder:'外描边颜色',innerBW:'内边框宽',outerBW:'外边框宽',fontSize:'字号',header:'表头',show:'显示',hide:'隐藏',
   bg:'背景',textColor:'文字颜色',text:'文字',padding:'内间距',t:'上',b:'下',l:'左',r:'右',
   zebra:'启用斑马纹',on:'开启',off:'关闭',altColor:'交替色',
   reset:'重置',generate:'生成到画布',
@@ -1569,12 +1956,13 @@ const _i18n={zh:{
   lightTheme:'切换亮色主题',darkTheme:'切换暗色主题',
   resetZoomTo100:'重置缩放为 100%',
   helpTitle:'CoyTable 使用说明',
+    helpDonate:'<h4>赞赏一杯咖啡吧</h4><p style="margin-bottom:10px">如果 CoyTable 对你有帮助，欢迎请开发者喝杯咖啡 ☕</p><div style="text-align:center"><svg width="140" height="140" viewBox="0 0 468 468" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:10px;border:1px solid var(--border);cursor:pointer;display:block;margin:0 auto" onclick="window.open(\'https://qr.alipay.com/fkx10668kquu0jgizd0sp19\')"><g clip-path="url(#c)"><path d="M468 0H0V468H468V0Z" fill="white"/><path d="M96 408H60V372H96V408Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M120 432H36V348H120V432ZM48 420H108V360H48V420Z" fill="black"/><path d="M144 432H132V420H144V432Z" fill="black"/><path d="M204 432H192V420H204V432Z" fill="black"/><path d="M228 432H216V420H228V432Z" fill="black"/><path d="M360 360H348V348H360V360Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M360 192H348V216H336V228H348V216H360V240H372V252H348V240H336V252H348V276H336V288H348V300H336V324H372V288H384V312H396V324H384V336H396V348H384V372H396V384H384V396H396V384H408V408H384V432H372V384H336V396H348V408H324V396H312V408H324V420H312V432H252V420H276V408H252V420H228V408H204V384H228V372H240V408H252V372H240V360H252V348H240V300H264V312H276V324H252V336H264V372H276V324H288V312H300V300H312V324H300V336H312V324H324V288H312V276H324V240H312V228H324V204H336V192H324V180H348V168H360V192ZM288 408H300V372H288V408ZM312 384H324V372H312V384ZM336 372H372V336H336V372ZM288 360H300V348H288V360Z" fill="black"/><path d="M336 432H324V420H336V432Z" fill="black"/><path d="M420 420H432V432H396V420H408V408H420V420Z" fill="black"/><path d="M156 360H168V372H180V384H168V396H180V408H156V420H144V408H132V396H144V384H156V372H144V348H132V324H120V312H156V360Z" fill="black"/><path d="M192 420H180V408H192V420Z" fill="black"/><path d="M432 408H420V396H432V408Z" fill="black"/><path d="M144 384H132V372H144V384Z" fill="black"/><path d="M420 384H408V372H420V384Z" fill="black"/><path d="M228 348H216V360H228V372H180V360H204V336H228V348Z" fill="black"/><path d="M240 360H228V348H240V360Z" fill="black"/><path d="M432 360H396V348H408V336H432V360Z" fill="black"/><path d="M48 336H36V324H48V336Z" fill="black"/><path d="M120 336H84V324H120V336Z" fill="black"/><path d="M228 324H192V336H180V312H228V324Z" fill="black"/><path d="M408 336H396V324H408V336Z" fill="black"/><path d="M72 216H84V204H120V216H96V228H72V240H84V264H72V312H84V324H48V312H60V288H36V264H48V276H60V252H48V228H60V204H72V216Z" fill="black"/><path d="M48 312H36V300H48V312Z" fill="black"/><path d="M120 312H108V300H120V312Z" fill="black"/><path d="M192 264H180V276H168V288H180V312H168V300H120V288H156V264H168V252H192V264Z" fill="black"/><path d="M360 312H348V300H360V312Z" fill="black"/><path d="M432 276H420V288H432V312H408V264H420V252H408V240H432V276Z" fill="black"/><path d="M144 264H132V276H120V264H108V276H120V288H108V300H84V288H96V252H144V264Z" fill="black"/><path d="M228 300H192V288H228V300Z" fill="black"/><path d="M276 300H264V288H276V300Z" fill="black"/><path d="M300 300H288V288H300V300Z" fill="black"/><path d="M192 288H180V276H192V288Z" fill="black"/><path d="M396 288H384V276H396V288Z" fill="black"/><path d="M204 276H192V264H204V276Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M192 96H204V108H192V132H204V156H192V144H180V168H204V156H216V144H228V156H240V168H216V180H240V168H252V156H264V180H276V168H300V180H288V192H300V204H288V216H300V240H288V252H276V240H264V228H276V216H264V204H252V240H240V252H252V264H240V276H216V264H228V240H216V228H228V216H216V228H180V216H168V228H156V216H144V204H156V192H168V204H180V180H156V156H168V144H156V156H144V132H156V108H168V120H180V108H168V96H156V84H192V96ZM204 216H216V204H204V216ZM192 204H204V180H192V204ZM240 192H252V180H240V192Z" fill="black"/><path d="M384 276H360V264H384V276Z" fill="black"/><path d="M300 264H288V252H300V264Z" fill="black"/><path d="M408 264H396V252H408V264Z" fill="black"/><path d="M168 252H144V240H168V252Z" fill="black"/><path d="M120 240H96V228H120V240Z" fill="black"/><path d="M144 228H120V216H144V228Z" fill="black"/><path d="M372 204H384V216H408V204H420V192H432V216H420V228H372V216H360V192H372V204Z" fill="black"/><path d="M60 204H48V216H36V192H60V204Z" fill="black"/><path d="M312 216H300V204H312V216Z" fill="black"/><path d="M120 168H108V180H132V192H144V204H120V192H84V180H96V156H120V168Z" fill="black"/><path d="M324 204H312V192H324V204Z" fill="black"/><path d="M408 204H396V192H408V204Z" fill="black"/><path d="M156 192H144V180H156V192Z" fill="black"/><path d="M312 192H300V180H312V192Z" fill="black"/><path d="M396 192H384V180H396V192Z" fill="black"/><path d="M432 180H420V192H408V168H432V180Z" fill="black"/><path d="M48 144H60V156H84V180H36V132H48V144Z" fill="black"/><path d="M144 180H132V156H144V180Z" fill="black"/><path d="M324 180H312V168H324V180Z" fill="black"/><path d="M384 180H372V168H384V180Z" fill="black"/><path d="M312 132H300V144H312V168H300V156H276V132H288V120H300V108H312V132Z" fill="black"/><path d="M336 144H372V168H360V156H348V168H336V156H324V108H336V144Z" fill="black"/><path d="M408 168H396V156H408V168Z" fill="black"/><path d="M132 156H120V144H132V156Z" fill="black"/><path d="M288 60H264V96H276V72H288V84H336V96H324V108H312V96H300V108H288V120H276V108H264V120H276V132H252V156H240V144H228V132H240V120H252V96H240V120H228V108H216V96H228V60H252V48H228V36H288V60Z" fill="black"/><path d="M420 144H432V156H408V132H420V144Z" fill="black"/><path d="M72 144H60V132H72V144Z" fill="black"/><path d="M96 144H84V132H96V144Z" fill="black"/><path d="M120 144H108V132H120V144Z" fill="black"/><path d="M384 144H372V132H384V144Z" fill="black"/><path d="M216 120H228V132H204V108H216V120Z" fill="black"/><path d="M96 96H60V60H96V96Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M120 120H36V36H120V120ZM48 108H108V48H48V108Z" fill="black"/><path d="M144 120H132V108H144V120Z" fill="black"/><path d="M408 96H372V60H408V96Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M432 120H348V36H432V120ZM360 108H420V48H360V108Z" fill="black"/><path d="M156 108H144V96H156V108Z" fill="black"/><path d="M144 96H132V84H144V96Z" fill="black"/><path d="M216 96H204V84H192V60H204V48H192V36H216V96Z" fill="black"/><path d="M156 84H144V60H156V84Z" fill="black"/><path d="M168 48H180V72H168V60H156V36H168V48Z" fill="black"/><path d="M144 60H132V48H144V60Z" fill="black"/><path d="M324 60H300V36H324V60Z" fill="black"/></g><defs><clipPath id="c"><rect width="468" height="468" fill="white"/></clipPath></defs></svg><div style="display:flex;align-items:center;justify-content:center;gap:4px;margin-top:6px;font-size:11px;color:var(--muted-fg)"><svg width="16" height="16" fill="#1677FF" viewBox="0 0 16 16"><path d="M2.541 0H13.5a2.55 2.55 0 0 1 2.54 2.563v8.297c-.006 0-.531-.046-2.978-.813-.412-.14-.916-.327-1.479-.536q-.456-.17-.957-.353a13 13 0 0 0 1.325-3.373H8.822V4.649h3.831v-.634h-3.83V2.121H7.26c-.274 0-.274.273-.274.273v1.621H3.11v.634h3.875v1.136h-3.2v.634H9.99c-.227.789-.532 1.53-.894 2.202-2.013-.67-4.161-1.212-5.51-.878-.864.214-1.42.597-1.746.998-1.499 1.84-.424 4.633 2.741 4.633 1.872 0 3.675-1.053 5.072-2.787 2.08 1.008 6.37 2.738 6.387 2.745v.105A2.55 2.55 0 0 1 13.5 16H2.541A2.55 2.55 0 0 1 0 13.437V2.563A2.55 2.55 0 0 1 2.541 0"/><path d="M2.309 9.27c-1.22 1.073-.49 3.034 1.978 3.034 1.434 0 2.868-.925 3.994-2.406-1.602-.789-2.959-1.353-4.425-1.207-.397.04-1.14.217-1.547.58Z"/></svg>支付宝</div></div>',
     applyDefault:'默认标准',applyDark:'暗黑',applyBlue:'蓝色商务',applyWarm:'暖色报表',applyGreen:'清新绿意',applyPink:'粉色温馨',applyPurple:'紫色典雅',applyGray:'灰色极简',
   },en:{
     collapseSize:'Table Size',collapseGlobal:'Global Style',collapseHeader:'Header Style',collapseCell:'Cell Style',collapseZebra:'Zebra',collapseTemplates:'Templates',collapseFillData:'Fill Data',
     rows:'Rows',cols:'Cols',rowH:'Row H',colW:'Col W',tableW:'Width',tableH:'Height',
     fixed:'Fixed',fill:'Fill',
-    radius:'Radius',innerBorder:'Inner',outerBorder:'Outer',innerBW:'Inner',outerBW:'Outer',fontSize:'Font',header:'Header',show:'Show',hide:'Hide',
+    radius:'Radius',innerBorder:'Inner Border',outerBorder:'Outer Border',innerBW:'Inner',outerBW:'Outer',fontSize:'Font',header:'Header',show:'Show',hide:'Hide',
     bg:'Bg',textColor:'Color',text:'Text',padding:'Padding',t:'T',b:'B',l:'L',r:'R',
     zebra:'Zebra',on:'On',off:'Off',altColor:'Alt',
     reset:'Reset',generate:'Generate',
@@ -1600,6 +1988,7 @@ const _i18n={zh:{
     helpPreset:'<h4>Quick Apply</h4><p><span class="hl">Preset Styles:</span> 8 color themes (Default, Dark, Blue Business, Warm Report, etc.) — one-click apply.</p><p><span class="hl">Preset Data:</span> 12 data templates (User Info, Product List, Bug Tracker, etc.) for quick filling.</p><p><span class="hl">Theme Dots:</span> Click colored dots on the top bar to switch themes instantly.</p>',
     helpAdvanced:'<h4>Advanced</h4><p><b>Alignment Toolbar:</b> Toggle left/center/right alignment and text wrapping from the top bar.</p><p><b>Excel Import:</b> Click "Import Excel" to load .xlsx/.xls/.csv files.</p><p><b>Clipboard Detect:</b> Click "Clipboard Detect" to paste tab-separated data from spreadsheets.</p><p><b>Preview Navigation:</b> Hold <span class="kbd">Space</span> + drag to pan; <span class="kbd">Ctrl</span> + wheel to zoom.</p><p><b>Language:</b> Toggle Chinese/English at the bottom bar.</p><p><b>Theme:</b> Toggle light/dark mode at the bottom bar.</p><p><b>Re-edit:</b> Select a CoyTable on canvas — a re-edit bar appears at the bottom to reload and modify.</p>',
     helpKeys:'<h4>Keyboard Shortcuts</h4><ul><li><span class="kbd">Enter</span> — Confirm edit</li><li><span class="kbd">Esc</span> — Cancel edit</li><li><span class="kbd">Tab</span> — Next cell / <span class="kbd">Shift</span> + <span class="kbd">Tab</span> — Previous cell</li><li><span class="kbd">Space</span> + drag — Pan preview</li><li><span class="kbd">Ctrl</span> + wheel — Zoom preview (25%–400%)</li><li><span class="kbd">Ctrl</span> + <span class="kbd">0</span> — Reset zoom to 100%</li></ul>',
+    helpDonate:'<h4>Buy Me a Coffee</h4><p style="margin-bottom:10px">If CoyTable helps you, feel free to buy the developer a coffee ☕</p><div style="text-align:center"><svg width="140" height="140" viewBox="0 0 468 468" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:10px;border:1px solid var(--border);cursor:pointer;display:block;margin:0 auto" onclick="window.open(\'https://qr.alipay.com/fkx10668kquu0jgizd0sp19\')"><g clip-path="url(#c)"><path d="M468 0H0V468H468V0Z" fill="white"/><path d="M96 408H60V372H96V408Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M120 432H36V348H120V432ZM48 420H108V360H48V420Z" fill="black"/><path d="M144 432H132V420H144V432Z" fill="black"/><path d="M204 432H192V420H204V432Z" fill="black"/><path d="M228 432H216V420H228V432Z" fill="black"/><path d="M360 360H348V348H360V360Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M360 192H348V216H336V228H348V216H360V240H372V252H348V240H336V252H348V276H336V288H348V300H336V324H372V288H384V312H396V324H384V336H396V348H384V372H396V384H384V396H396V384H408V408H384V432H372V384H336V396H348V408H324V396H312V408H324V420H312V432H252V420H276V408H252V420H228V408H204V384H228V372H240V408H252V372H240V360H252V348H240V300H264V312H276V324H252V336H264V372H276V324H288V312H300V300H312V324H300V336H312V324H324V288H312V276H324V240H312V228H324V204H336V192H324V180H348V168H360V192ZM288 408H300V372H288V408ZM312 384H324V372H312V384ZM336 372H372V336H336V372ZM288 360H300V348H288V360Z" fill="black"/><path d="M336 432H324V420H336V432Z" fill="black"/><path d="M420 420H432V432H396V420H408V408H420V420Z" fill="black"/><path d="M156 360H168V372H180V384H168V396H180V408H156V420H144V408H132V396H144V384H156V372H144V348H132V324H120V312H156V360Z" fill="black"/><path d="M192 420H180V408H192V420Z" fill="black"/><path d="M432 408H420V396H432V408Z" fill="black"/><path d="M144 384H132V372H144V384Z" fill="black"/><path d="M420 384H408V372H420V384Z" fill="black"/><path d="M228 348H216V360H228V372H180V360H204V336H228V348Z" fill="black"/><path d="M240 360H228V348H240V360Z" fill="black"/><path d="M432 360H396V348H408V336H432V360Z" fill="black"/><path d="M48 336H36V324H48V336Z" fill="black"/><path d="M120 336H84V324H120V336Z" fill="black"/><path d="M228 324H192V336H180V312H228V324Z" fill="black"/><path d="M408 336H396V324H408V336Z" fill="black"/><path d="M72 216H84V204H120V216H96V228H72V240H84V264H72V312H84V324H48V312H60V288H36V264H48V276H60V252H48V228H60V204H72V216Z" fill="black"/><path d="M48 312H36V300H48V312Z" fill="black"/><path d="M120 312H108V300H120V312Z" fill="black"/><path d="M192 264H180V276H168V288H180V312H168V300H120V288H156V264H168V252H192V264Z" fill="black"/><path d="M360 312H348V300H360V312Z" fill="black"/><path d="M432 276H420V288H432V312H408V264H420V252H408V240H432V276Z" fill="black"/><path d="M144 264H132V276H120V264H108V276H120V288H108V300H84V288H96V252H144V264Z" fill="black"/><path d="M228 300H192V288H228V300Z" fill="black"/><path d="M276 300H264V288H276V300Z" fill="black"/><path d="M300 300H288V288H300V300Z" fill="black"/><path d="M192 288H180V276H192V288Z" fill="black"/><path d="M396 288H384V276H396V288Z" fill="black"/><path d="M204 276H192V264H204V276Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M192 96H204V108H192V132H204V156H192V144H180V168H204V156H216V144H228V156H240V168H216V180H240V168H252V156H264V180H276V168H300V180H288V192H300V204H288V216H300V240H288V252H276V240H264V228H276V216H264V204H252V240H240V252H252V264H240V276H216V264H228V240H216V228H228V216H216V228H180V216H168V228H156V216H144V204H156V192H168V204H180V180H156V156H168V144H156V156H144V132H156V108H168V120H180V108H168V96H156V84H192V96ZM204 216H216V204H204V216ZM192 204H204V180H192V204ZM240 192H252V180H240V192Z" fill="black"/><path d="M384 276H360V264H384V276Z" fill="black"/><path d="M300 264H288V252H300V264Z" fill="black"/><path d="M408 264H396V252H408V264Z" fill="black"/><path d="M168 252H144V240H168V252Z" fill="black"/><path d="M120 240H96V228H120V240Z" fill="black"/><path d="M144 228H120V216H144V228Z" fill="black"/><path d="M372 204H384V216H408V204H420V192H432V216H420V228H372V216H360V192H372V204Z" fill="black"/><path d="M60 204H48V216H36V192H60V204Z" fill="black"/><path d="M312 216H300V204H312V216Z" fill="black"/><path d="M120 168H108V180H132V192H144V204H120V192H84V180H96V156H120V168Z" fill="black"/><path d="M324 204H312V192H324V204Z" fill="black"/><path d="M408 204H396V192H408V204Z" fill="black"/><path d="M156 192H144V180H156V192Z" fill="black"/><path d="M312 192H300V180H312V192Z" fill="black"/><path d="M396 192H384V180H396V192Z" fill="black"/><path d="M432 180H420V192H408V168H432V180Z" fill="black"/><path d="M48 144H60V156H84V180H36V132H48V144Z" fill="black"/><path d="M144 180H132V156H144V180Z" fill="black"/><path d="M324 180H312V168H324V180Z" fill="black"/><path d="M384 180H372V168H384V180Z" fill="black"/><path d="M312 132H300V144H312V168H300V156H276V132H288V120H300V108H312V132Z" fill="black"/><path d="M336 144H372V168H360V156H348V168H336V156H324V108H336V144Z" fill="black"/><path d="M408 168H396V156H408V168Z" fill="black"/><path d="M132 156H120V144H132V156Z" fill="black"/><path d="M288 60H264V96H276V72H288V84H336V96H324V108H312V96H300V108H288V120H276V108H264V120H276V132H252V156H240V144H228V132H240V120H252V96H240V120H228V108H216V96H228V60H252V48H228V36H288V60Z" fill="black"/><path d="M420 144H432V156H408V132H420V144Z" fill="black"/><path d="M72 144H60V132H72V144Z" fill="black"/><path d="M96 144H84V132H96V144Z" fill="black"/><path d="M120 144H108V132H120V144Z" fill="black"/><path d="M384 144H372V132H384V144Z" fill="black"/><path d="M216 120H228V132H204V108H216V120Z" fill="black"/><path d="M96 96H60V60H96V96Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M120 120H36V36H120V120ZM48 108H108V48H48V108Z" fill="black"/><path d="M144 120H132V108H144V120Z" fill="black"/><path d="M408 96H372V60H408V96Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M432 120H348V36H432V120ZM360 108H420V48H360V108Z" fill="black"/><path d="M156 108H144V96H156V108Z" fill="black"/><path d="M144 96H132V84H144V96Z" fill="black"/><path d="M216 96H204V84H192V60H204V48H192V36H216V96Z" fill="black"/><path d="M156 84H144V60H156V84Z" fill="black"/><path d="M168 48H180V72H168V60H156V36H168V48Z" fill="black"/><path d="M144 60H132V48H144V60Z" fill="black"/><path d="M324 60H300V36H324V60Z" fill="black"/></g><defs><clipPath id="c"><rect width="468" height="468" fill="white"/></clipPath></defs></svg><div style="display:flex;align-items:center;justify-content:center;gap:4px;margin-top:6px;font-size:11px;color:var(--muted-fg)"><svg width="16" height="16" fill="#1677FF" viewBox="0 0 16 16"><path d="M2.541 0H13.5a2.55 2.55 0 0 1 2.54 2.563v8.297c-.006 0-.531-.046-2.978-.813-.412-.14-.916-.327-1.479-.536q-.456-.17-.957-.353a13 13 0 0 0 1.325-3.373H8.822V4.649h3.831v-.634h-3.83V2.121H7.26c-.274 0-.274.273-.274.273v1.621H3.11v.634h3.875v1.136h-3.2v.634H9.99c-.227.789-.532 1.53-.894 2.202-2.013-.67-4.161-1.212-5.51-.878-.864.214-1.42.597-1.746.998-1.499 1.84-.424 4.633 2.741 4.633 1.872 0 3.675-1.053 5.072-2.787 2.08 1.008 6.37 2.738 6.387 2.745v.105A2.55 2.55 0 0 1 13.5 16H2.541A2.55 2.55 0 0 1 0 13.437V2.563A2.55 2.55 0 0 1 2.541 0"/><path d="M2.309 9.27c-1.22 1.073-.49 3.034 1.978 3.034 1.434 0 2.868-.925 3.994-2.406-1.602-.789-2.959-1.353-4.425-1.207-.397.04-1.14.217-1.547.58Z"/></svg>Alipay</div></div>',
 }};
 function applyLang(lang){
   // Clean up any data-zh that may have saved broken text from earlier buggy HTML
@@ -1626,7 +2015,7 @@ function applyLang(lang){
     if(restore){if(el.dataset.zh)el.textContent=el.dataset.zh;}
     else{
       if(!el.dataset.zh)el.dataset.zh=txt;
-      const pairs=[['行数',t.rows],['列数',t.cols],['行高',t.rowH],['列宽',t.colW],['表宽',t.tableW],['表高',t.tableH],['圆角',t.radius],['内边距',t.innerBorder],['外边距',t.outerBorder],['外边框宽',t.outerBW],['内边框宽',t.innerBW],['字号',t.fontSize],['表头',t.header],['背景',t.bg],['文字颜色',t.textColor],['文字',t.text],['内间距',t.padding],['交替色',t.altColor],['启用斑马纹',t.zebra]];
+      const pairs=[['行数',t.rows],['列数',t.cols],['行高',t.rowH],['列宽',t.colW],['表宽',t.tableW],['表高',t.tableH],['圆角',t.radius],['内描边颜色',t.innerBorder],['外描边颜色',t.outerBorder],['外边框宽',t.outerBW],['内边框宽',t.innerBW],['字号',t.fontSize],['表头',t.header],['背景',t.bg],['文字颜色',t.textColor],['文字',t.text],['内间距',t.padding],['交替色',t.altColor],['启用斑马纹',t.zebra]];
       for(const [k,v] of pairs){if(txt===k){el.textContent=v;break;}}
     }
   });

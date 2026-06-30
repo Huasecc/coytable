@@ -837,6 +837,7 @@ function render() {
         {v:'tag',icon:'tag'},{v:'action',icon:'wrench'}
       ].map(t=>`<button data-action="insert-col-type" data-v="${t.v}" data-after="${ac}" class="hp-type-btn" style="width:20px;height:20px"><i data-lucide="${t.icon}" style="width:11px;height:11px"></i></button>`).join('');
       document.body.appendChild(p);try{lucide.createIcons()}catch(e){}
+      p.addEventListener('mouseenter',function(){if(_citimer){clearTimeout(_citimer);_citimer=null;}});
       // Position popup above cursor
       p.style.top=(e.clientY-10)+'px';p.style.left=(e.clientX-10)+'px';p.style.bottom='auto';p.style.transform='none';
       requestAnimationFrame(()=>{
@@ -861,9 +862,13 @@ function render() {
       });
     });
     hit.addEventListener('mouseleave',function(){
-      const el=document.querySelector('.cib-type-popup');
-      const hovered=document.querySelector('.cib-hit:hover');
-      if(el&&!hovered)el.remove();
+      if(_citimer)clearTimeout(_citimer);
+      _citimer=setTimeout(()=>{
+        _citimer=null;
+        const el=document.querySelector('.cib-type-popup');
+        const hovered=document.querySelector('.cib-hit:hover');
+        if(el&&!hovered)el.remove();
+      },150);
     });
   });
   if(_lang!=='zh')applyLang(_lang);
@@ -1151,7 +1156,10 @@ let _citimer=null;
 document.addEventListener('mouseover',function(e){
   const p=document.querySelector('.cib-type-popup');
   if(!p)return;
-  if(!e.target.closest('.cib-type-popup')&&!e.target.closest('.cib-hit')){const el=document.querySelector('.cib-type-popup');if(el)el.remove();}else{}
+  if(!e.target.closest('.cib-type-popup')&&!e.target.closest('.cib-hit')){
+    if(_citimer)return;
+    const el=document.querySelector('.cib-type-popup');if(el)el.remove();
+  }
 });
 
 // ══ Drag & Drop Reorder ═══
@@ -1215,6 +1223,41 @@ document.getElementById('previewWrap').addEventListener('drop',function(e){
     if(src<dst)for(let r=src;r<dst;r++)model.rowAlign[r]=model.rowAlign[r+1];
     else for(let r=src;r>dst;r--)model.rowAlign[r]=model.rowAlign[r-1];
     model.rowAlign[dst]=va;
+  }
+  // Update selection state to follow reordered item
+  if(_dragState.type==='col'){
+    if(_selectedCol!==null){
+      if(_selectedCol===src)_selectedCol=dst;
+      else if(src<dst&&_selectedCol>src&&_selectedCol<=dst)_selectedCol--;
+      else if(src>dst&&_selectedCol>=dst&&_selectedCol<src)_selectedCol++;
+    }
+    if(_flashCol>=0){
+      if(_flashCol===src)_flashCol=dst;
+      else if(src<dst&&_flashCol>src&&_flashCol<=dst)_flashCol--;
+      else if(src>dst&&_flashCol>=dst&&_flashCol<src)_flashCol++;
+    }
+    // Update _customCols indices for reorder
+    if(model._customCols){
+      const ns=new Set();
+      for(const v of model._customCols){
+        if(v===src)ns.add(dst);
+        else if(src<dst&&v>src&&v<=dst)ns.add(v-1);
+        else if(src>dst&&v>=dst&&v<src)ns.add(v+1);
+        else ns.add(v);
+      }
+      model._customCols=ns;
+    }
+  }else{
+    if(_selectedRow!==null){
+      if(_selectedRow===src)_selectedRow=dst;
+      else if(src<dst&&_selectedRow>src&&_selectedRow<=dst)_selectedRow--;
+      else if(src>dst&&_selectedRow>=dst&&_selectedRow<src)_selectedRow++;
+    }
+    if(_flashRow>=0){
+      if(_flashRow===src)_flashRow=dst;
+      else if(src<dst&&_flashRow>src&&_flashRow<=dst)_flashRow--;
+      else if(src>dst&&_flashRow>=dst&&_flashRow<src)_flashRow++;
+    }
   }
   _dragState=null;
   render();

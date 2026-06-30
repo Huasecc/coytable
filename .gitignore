@@ -4,9 +4,4 @@ node_modules/
 CoyTable-Cover.png
 REVIEW.md
 PUBLISH_GUIDE.md
-# Source files (only README on GitHub)
-code.js
-fix_unicode.js
-icon.png
-manifest.json
-ui.html
+tree_*

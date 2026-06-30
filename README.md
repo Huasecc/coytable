@@ -95,19 +95,19 @@ Each column can be set to a specific type via the column handle popup:
 - **Image** — Gray placeholder rectangle, display only
 - **Progress** — Bar with percentage label, parsed from value (0–100)
 - **Tag** — Colored label with dot, format: `label|color|style`
-- **Action** — Group of action buttons, configurable count and labels
+- **Action** — Configurable action buttons with customizable colors and styles (ghost/filled), configurable via column settings dialog
 
-### 🏷️ Tag Value Format
+### ⚙️ Action Column Configuration
 
-Tags use a pipe-delimited format within the cell:
-```
-label|#hexcolor|style
-```
+Click the settings icon in the column handle popup to open the **Action Column Config** dialog:
 
-Examples:
-- `上架|#22C55E|filled` — Green filled tag
-- `待办|#F59E0B|ghost` — Amber ghost (outline) tag
-- `P0|#EF4444|filled` — Red priority tag
+- **Button Count** — Set 1–5 buttons per action cell
+- **Button Label** — Customize the text for each button
+- **Button Color** — Pick a color via hex input, color picker, or preset color swatches
+- **Button Style** — Toggle between **Ghost** (light background, colored text/border) and **Filled** (solid background, white text)
+- **Preset Colors** — Quick-select from 9 common colors (red, orange, yellow, green, cyan, blue, purple, pink, gray)
+
+> Action column colors are fully rendered on the Figma canvas, matching the preview.
 
 ---
 
@@ -311,19 +311,19 @@ All panel labels, tooltips, and buttons update instantly.
 - **图片** — 灰色占位方块，仅显示
 - **进度** — 进度条 + 百分比，从数值解析（0–100）
 - **标签** — 彩色标签 + 圆点，格式：`标签|颜色|样式`
-- **操作** — 操作按钮组，可配置数量和文字
+- **操作** — 操作按钮组，可配置数量、文字、颜色和风格（浅底/实心），通过列配置弹窗设置
 
-### 🏷️ 标签值格式
+### ⚙️ 操作列配置
 
-标签使用竖线分隔格式：
-```
-标签|#十六进制颜色|样式
-```
+点击列表头弹窗中的齿轮图标打开**操作列配置**弹窗：
 
-示例：
-- `上架|#22C55E|filled` — 绿色实心标签
-- `待办|#F59E0B|ghost` — 琥珀色描边标签
-- `P0|#EF4444|filled` — 红色优先级标签
+- **按钮数量** — 每个操作单元格可设置 1–5 个按钮
+- **按钮文案** — 自定义每个按钮的文字
+- **按钮颜色** — 支持 Hex 输入、颜色选择器、预设色块快速选取
+- **按钮风格** — 切换 **浅底**（浅色背景 + 彩色文字/边框）和 **实心**（纯色背景 + 白色文字）
+- **推荐色值** — 9 种常用颜色一键选用（红、橙、黄、绿、青、蓝、紫、粉、灰）
+
+> 操作列的颜色配置在 Figma 画布上完整渲染，与预览一致。
 
 ---
 

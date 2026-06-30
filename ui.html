@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -1242,7 +1242,10 @@ function showTagEditor(r,c,anchorEl){
 }
 
 function renderCell(r,c,val){
-  if (model.hasHeader&&r===0) return esc(val);
+  if (model.hasHeader&&r===0){
+    const t=model.colTypes[c]||'text';
+    if(t==='checkbox'||t==='radio'){}else return esc(val);
+  }
   const t=model.colTypes[c]||'text';
   const ca=model.colAlign[c]||model.textAlign||'left';
   const jc=ca==='left'?'flex-start':ca==='right'?'flex-end':'center';
@@ -1251,7 +1254,7 @@ function renderCell(r,c,val){
     case 'radio': inner=`<span style="display:inline-flex;width:14px;height:14px;border-radius:50%;border:2px solid var(--primary);align-items:center;justify-content:center;flex-shrink:0">${val==='1'?'<span style="width:8px;height:8px;border-radius:50%;background:var(--primary)"></span>':''}</span>`;break;
     case 'checkbox': inner=`<span style="display:inline-flex;width:14px;height:14px;border-radius:3px;border:2px solid ${val==='1'?'var(--primary)':'#D4D4D8'};background:${val==='1'?'var(--primary)':'transparent'};align-items:center;justify-content:center;flex-shrink:0;font-size:10px;color:#fff">${val==='1'?'✓':''}</span>`;break;
     case 'index': inner=`<span style="color:var(--muted-fg);font-size:10px">${r+1-(model.hasHeader?1:0)}</span>`;break;
-    case 'image': inner=`<span style="display:inline-flex;width:30px;height:30px;background:var(--muted);border-radius:6px;flex-shrink:0"></span>`;break;
+    case 'image': inner=`<span style="display:inline-flex;width:30px;height:30px;background:#E4E4E7;border-radius:6px;flex-shrink:0"></span>`;break;
     case 'progress': {const p=Math.min(100,Math.max(0,parseInt(val)||0)); inner=`<span style="display:inline-flex;align-items:center;gap:4px"><span style="width:60px;height:8px;background:#E4E4E7;border-radius:4px;overflow:hidden"><span style="width:${p}%;height:100%;background:var(--primary);border-radius:4px;display:block"></span></span><span style="font-size:10px;color:var(--muted-fg);white-space:nowrap">${p}%</span></span>`;break;}
     case 'tag': {const a=(val||'标签').split('|'),tt=a[0],tc=a[1]||'#007ffc',ts=a[2]||'ghost',fi=ts==='filled';inner=`<span style="display:inline-flex;align-items:center;gap:5px;padding:2px 10px;border-radius:5px;font-size:11px;font-weight:500;background:${fi?tc:tc+'18'};color:${fi?'#fff':tc};border:1px solid ${fi?tc:tc+'40'};line-height:1.4"><span style="width:5px;height:5px;border-radius:50%;background:${fi?'rgba(255,255,255,.7)':tc};flex-shrink:0"></span>${esc(tt)}</span>`;break;}
     case 'action': {const n=parseInt(model.colProps[c]?.actionCount)||2,bt=[],astyles=model.colProps[c]?.actionStyles||[];for(let i=0;i<n;i++){const lb=(model.colProps[c]?.actionLabels&&model.colProps[c].actionLabels[i])||(i===0?'编辑':i===1?'删除':'更多');const as=astyles[i]||{};
@@ -1401,7 +1404,7 @@ document.getElementById('previewWrap').addEventListener('click',function(e){
         else if(a==='dup-col'){if(_selectedCol!==null&&_selectedCol>cc)_selectedCol++;for(let r=0;r<model.rows;r++)model.cellData[r].splice(cc+1,0,model.cellData[r][cc]);model.colTypes.splice(cc+1,0,model.colTypes[cc]);model.colAlign.splice(cc+1,0,'');model.columnWidths.splice(cc+1,0,model.columnWidths[cc]||model.colWidth);shiftCustomCols(cc+1,1);model.cols++;document.getElementById('cCols').value=model.cols;_flashCol=_selectedCol+1;render();_reopenPopup();}
         else if(a==='del-col'){if(model.cols<=1){showToast('至少保留一行','error');return;}if(_selectedCol!==null){if(_selectedCol===cc)_selectedCol=null;else if(_selectedCol>cc)_selectedCol--;}for(let r=0;r<model.rows;r++)model.cellData[r].splice(cc,1);model.colTypes.splice(cc,1);model.colAlign.splice(cc,1);model.columnWidths.splice(cc,1);removeCustomCol(cc);model.cols--;document.getElementById('cCols').value=model.cols;render();}
         else if(a==='col-align'){const nv=b.dataset.v===model.colAlign[cc]?'':b.dataset.v;model.colAlign[cc]=nv;render();_reopenPopup();}
-        else if(a==='col-type'){model.colTypes[cc]=b.dataset.v;if(model.hasHeader&&model.cellData[0]){if(b.dataset.v==='radio')model.cellData[0][cc]='单选';else if(b.dataset.v==='checkbox')model.cellData[0][cc]='选择';else if(b.dataset.v==='index')model.cellData[0][cc]='序号';else if(b.dataset.v==='progress')model.cellData[0][cc]='进度';else if(b.dataset.v==='tag')model.cellData[0][cc]='标签';else if(b.dataset.v==='action')model.cellData[0][cc]='操作';}const cw=model.columnWidths[cc]||model.colWidth;const minW=b.dataset.v==='progress'?120:b.dataset.v==='tag'?100:b.dataset.v==='action'?120:b.dataset.v==='index'?48:model.colWidth;if(cw<minW){model.columnWidths[cc]=minW;}if(!model._customCols)model._customCols=new Set();model._customCols.add(cc);render();_reopenPopup();}
+        else if(a==='col-type'){model.colTypes[cc]=b.dataset.v;if(model.hasHeader&&model.cellData[0]){if(b.dataset.v==='radio')model.cellData[0][cc]='单选';else if(b.dataset.v==='index')model.cellData[0][cc]='序号';else if(b.dataset.v==='progress')model.cellData[0][cc]='进度';else if(b.dataset.v==='tag')model.cellData[0][cc]='标签';else if(b.dataset.v==='action')model.cellData[0][cc]='操作';else if(b.dataset.v==='image')model.cellData[0][cc]='图片';}const cw=model.columnWidths[cc]||model.colWidth;const minW=b.dataset.v==='progress'?120:b.dataset.v==='tag'?100:b.dataset.v==='action'?120:b.dataset.v==='index'?48:model.colWidth;if(cw<minW){model.columnWidths[cc]=minW;}if(!model._customCols)model._customCols=new Set();model._customCols.add(cc);render();_reopenPopup();}
         else if(a==='col-config'){showColConfig(cc);p.remove();}
       });
     },ch2);
@@ -1495,7 +1498,19 @@ document.getElementById('previewWrap').addEventListener('click',function(e){
 
     // Toggle types: radio, checkbox — click toggles 0/1
     if(colType==='radio'||colType==='checkbox'){
-      if(r===0&&model.hasHeader)return; // Don't toggle header row
+      if(r===0&&model.hasHeader){
+        if(colType==='checkbox'){ // Header click = select all / deselect all
+          const allChecked=model.cellData.every((row,i)=>i===0||(row[c]==='1'));
+          const nv=allChecked?'0':'1';
+          for(let i=1;i<model.rows;i++){if(!model.cellData[i])model.cellData[i]=[];model.cellData[i][c]=nv;}
+          model.cellData[0][c]=nv; // Sync header checkbox state
+          render();
+        }else if(colType==='radio'){ // Header click = toggle independently
+          model.cellData[0][c]=model.cellData[0][c]==='1'?'0':'1';
+          render();
+        }
+        return;
+      }
       if(_editingCell){_saveEdit(_editingCell);}
       if(!model.cellData[r])model.cellData[r]=[];
       model.cellData[r][c]=model.cellData[r][c]==='1'?'0':'1';
@@ -2188,7 +2203,7 @@ const FILL_PRESETS={
   task:{
     header:['任务','负责人','状态','操作'],
     types:['text','text','tag','action'],
-    colProps:[{},{},{},{actionCount:3,actionLabels:['编辑','删除','完成']}],
+    colProps:[{},{},{},{actionCount:3,actionLabels:['编辑','删除','完成'],actionStyles:[{color:'#007ffc',style:'ghost'},{color:'#EF4444',style:'ghost'},{color:'#22C55E',style:'ghost'}]}],
     rows:[
       ['修复登录Bug','张三','进行中|#F59E0B|filled',''],
       ['更新文档','李四','已完成|#22C55E|filled',''],
@@ -2212,7 +2227,7 @@ const FILL_PRESETS={
   order:{
     header:['订单号','客户','金额','状态','操作'],
     types:['text','text','text','tag','action'],
-    colProps:[{},{},{},{actionCount:2,actionLabels:['发货','取消']},{actionCount:3,actionLabels:['详情','编辑','删除']}],
+    colProps:[{},{},{},{actionCount:2,actionLabels:['发货','取消']},{actionCount:3,actionLabels:['详情','编辑','删除'],actionStyles:[{color:'#007ffc',style:'ghost'},{color:'#F59E0B',style:'ghost'},{color:'#EF4444',style:'ghost'}]}],
     rows:[
       ['ORD-2025001','云帆科技','¥12,800','已支付|#22C55E|filled',''],
       ['ORD-2025002','星辰互联','¥5,600','待发货|#F59E0B|filled',''],
@@ -2224,7 +2239,7 @@ const FILL_PRESETS={
   bug:{
     header:['标题','优先级','状态','负责人','操作'],
     types:['text','tag','tag','text','action'],
-    colProps:[{},{actionCount:3,actionLabels:['P0','P1','P2']},{actionCount:3,actionLabels:['打开','进行中','已关闭']},{},{actionCount:2,actionLabels:['编辑','删除']}],
+    colProps:[{},{actionCount:3,actionLabels:['P0','P1','P2']},{actionCount:3,actionLabels:['打开','进行中','已关闭']},{},{actionCount:2,actionLabels:['编辑','删除'],actionStyles:[{color:'#007ffc',style:'ghost'},{color:'#EF4444',style:'ghost'}]}],
     rows:[
       ['登录页面白屏','P0|#EF4444|filled','进行中|#F59E0B|filled','张三',''],
       ['数据导出报错','P1|#F59E0B|filled','打开|#6B7280|ghost','李四',''],

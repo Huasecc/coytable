@@ -294,13 +294,17 @@ function createTagCell(cell, val, textHAlign) {
 function createActionCell(cell, colProps, c, textHAlign) {
   cell.itemSpacing = 8;
   const n = parseInt(colProps && colProps[c] && colProps[c].actionCount) || 2;
+  const actionStyles = (colProps && colProps[c] && colProps[c].actionStyles) || [];
   for (let i = 0; i < n; i++) {
     const lb = (colProps && colProps[c] && colProps[c].actionLabels && colProps[c].actionLabels[i]) || (i === 0 ? '编辑' : i === 1 ? '删除' : '更多');
+    const as = actionStyles[i] || {};
+    const ac = as.color || '#007ffc';
+    const af = as.style === 'filled';
     const txt = figma.createText();
     try { txt.characters = lb; } catch(e) { _logWarn('act char', e); }
     try { txt.fontSize = 11; } catch(e) { _logWarn('act fontSize', e); }
     try { txt.fontName = { family: 'Inter', style: 'Medium' }; } catch(e) { _logWarn('act fontName', e); }
-    try { txt.fills = [{ type: 'SOLID', color: hexToRgb('#A1A1AA') }]; } catch(e) { _logWarn('act fills', e); }
+    try { txt.fills = [{ type: 'SOLID', color: hexToRgb(af ? '#FFFFFF' : ac) }]; } catch(e) { _logWarn('act fills', e); }
     try { txt.textAlignHorizontal = textHAlign; } catch(e) { _logWarn('act align', e); }
     const bf = figma.createFrame();
     bf.resize(46, 21);
@@ -310,8 +314,8 @@ function createActionCell(cell, colProps, c, textHAlign) {
     bf.counterAxisAlignItems = 'CENTER';
     bf.primaryAxisAlignItems = 'CENTER';
     bf.cornerRadius = 4;
-    bf.fills = [{ type: 'SOLID', color: hexToRgb('#F4F4F5') }];
-    bf.strokes = [{ type: 'SOLID', color: hexToRgb('#E4E4E7') }];
+    bf.fills = [{ type: 'SOLID', color: hexToRgb(af ? ac : '#F4F4F5') }];
+    bf.strokes = [{ type: 'SOLID', color: hexToRgb(ac), opacity: af ? 1 : 0.25 }];
     bf.strokeWeight = 1;
     bf.paddingLeft = 8; bf.paddingRight = 8;
     bf.paddingTop = 0; bf.paddingBottom = 0;
